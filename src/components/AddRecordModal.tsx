@@ -1,18 +1,6 @@
 import { useState } from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
-  Typography,
-  Box,
-  TextField,
-  Button,
-  MenuItem,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { PlusCircle } from 'lucide-react';
+import Modal from './Modal';
 import type { BusinessRecord } from '../data/teamData';
 import { allTeamMembers } from '../data/teamData';
 
@@ -21,6 +9,8 @@ interface AddRecordModalProps {
   onClose: () => void;
   onAdd: (newRecord: BusinessRecord) => void;
 }
+
+const cities = ['Toshkent', 'Samarqand', 'Buxoro', 'Qarshi', 'Andijon', 'Fargʻona', 'Jizzax'];
 
 const AddRecordModal = ({ isOpen, onClose, onAdd }: AddRecordModalProps) => {
   const [name, setName] = useState('');
@@ -58,174 +48,132 @@ const AddRecordModal = ({ isOpen, onClose, onAdd }: AddRecordModalProps) => {
   };
 
   return (
-    <Dialog
-      open={isOpen}
+    <Modal
+      isOpen={isOpen}
       onClose={onClose}
+      title={
+        <span className="inline-flex items-center gap-2">
+          <PlusCircle size={20} className="text-brand-600" />
+          Yangi biznes qoʻshish
+        </span>
+      }
+      subtitle="Maʼlumotlarni toʻldiring — yozuv avtomatik «Yangi» statusida saqlanadi"
       maxWidth="sm"
-      fullWidth
-      slotProps={{
-        paper: {
-          sx: {
-            backgroundColor: '#0f172a',
-            color: '#f8fafc',
-            borderRadius: '20px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            backgroundImage: 'none',
-          },
-        },
-        backdrop: {
-          sx: {
-            backgroundColor: 'rgba(5, 8, 16, 0.8)',
-            backdropFilter: 'blur(8px)',
-          },
-        },
-      }}
     >
-      <form onSubmit={handleSubmit}>
-        <DialogTitle
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            p: 3,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-            backgroundColor: '#131d33',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <AddCircleIcon sx={{ color: '#3b82f6' }} />
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#f8fafc' }}>
-              Yangi Biznes Qoʻshish
-            </Typography>
-          </Box>
-          <IconButton onClick={onClose} sx={{ color: '#94a3b8' }} size="small">
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-ink-soft" htmlFor="biznes-nomi">
+            Biznes nomi *
+          </label>
+          <input
+            id="biznes-nomi"
             required
-            fullWidth
-            label="Biznes Nomi"
+            className="input"
             placeholder="Masalan: Rayhon Milliy Taomlar"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            slotProps={{
-              inputLabel: { sx: { color: '#94a3b8' } },
-              input: { sx: { color: '#ffffff', backgroundColor: '#162032', borderRadius: 2 } },
-            }}
           />
+        </div>
 
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <TextField
-              select
-              fullWidth
-              label="Kirituvchi aʼzo"
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-ink-soft" htmlFor="azo">
+              Kirituvchi aʼzo
+            </label>
+            <select
+              id="azo"
+              className="input"
               value={member}
               onChange={(e) => setMember(e.target.value)}
-              slotProps={{
-                inputLabel: { sx: { color: '#94a3b8' } },
-                input: { sx: { color: '#ffffff', backgroundColor: '#162032', borderRadius: 2 } },
-              }}
             >
               {allTeamMembers.map((m) => (
-                <MenuItem key={m.id} value={m.name}>
+                <option key={m.id} value={m.name}>
                   {m.name}
-                </MenuItem>
+                </option>
               ))}
-            </TextField>
-
-            <TextField
-              select
-              fullWidth
-              label="Shahar"
+            </select>
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-ink-soft" htmlFor="shahar">
+              Shahar
+            </label>
+            <select
+              id="shahar"
+              className="input"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              slotProps={{
-                inputLabel: { sx: { color: '#94a3b8' } },
-                input: { sx: { color: '#ffffff', backgroundColor: '#162032', borderRadius: 2 } },
-              }}
             >
-              <MenuItem value="Toshkent">Toshkent</MenuItem>
-              <MenuItem value="Samarqand">Samarqand</MenuItem>
-              <MenuItem value="Buxoro">Buxoro</MenuItem>
-              <MenuItem value="Qarshi">Qarshi</MenuItem>
-              <MenuItem value="Andijon">Andijon</MenuItem>
-              <MenuItem value="Fargʻona">Fargʻona</MenuItem>
-            </TextField>
-          </Box>
+              {cities.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
-          <TextField
-            fullWidth
-            label="Kategoriya / Faoliyat turi"
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-ink-soft" htmlFor="kategoriya">
+            Kategoriya / faoliyat turi
+          </label>
+          <input
+            id="kategoriya"
+            className="input"
             placeholder="Masalan: Restoran, Taʼlim, Mebel..."
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            slotProps={{
-              inputLabel: { sx: { color: '#94a3b8' } },
-              input: { sx: { color: '#ffffff', backgroundColor: '#162032', borderRadius: 2 } },
-            }}
           />
+        </div>
 
-          <TextField
-            fullWidth
-            label="Telefon raqami"
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-ink-soft" htmlFor="telefon">
+            Telefon raqami
+          </label>
+          <input
+            id="telefon"
+            className="input"
             placeholder="+998 90 123 45 67"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            slotProps={{
-              inputLabel: { sx: { color: '#94a3b8' } },
-              input: { sx: { color: '#ffffff', backgroundColor: '#162032', borderRadius: 2 } },
-            }}
           />
+        </div>
 
-          <TextField
-            fullWidth
-            label="Manzil"
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-ink-soft" htmlFor="manzil">
+            Manzil
+          </label>
+          <input
+            id="manzil"
+            className="input"
             placeholder="Koʻcha, uy yoki moʻljal"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            slotProps={{
-              inputLabel: { sx: { color: '#94a3b8' } },
-              input: { sx: { color: '#ffffff', backgroundColor: '#162032', borderRadius: 2 } },
-            }}
           />
+        </div>
 
-          <TextField
-            fullWidth
-            label="Veb-sayt yoki havola (ixtiyoriy)"
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-ink-soft" htmlFor="havola">
+            Veb-sayt yoki havola (ixtiyoriy)
+          </label>
+          <input
+            id="havola"
+            className="input"
             placeholder="https://example.uz"
             value={link}
             onChange={(e) => setLink(e.target.value)}
-            slotProps={{
-              inputLabel: { sx: { color: '#94a3b8' } },
-              input: { sx: { color: '#ffffff', backgroundColor: '#162032', borderRadius: 2 } },
-            }}
           />
-        </DialogContent>
+        </div>
 
-        <DialogActions sx={{ p: 3, borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-          <Button onClick={onClose} sx={{ color: '#94a3b8', textTransform: 'none' }}>
+        <div className="mt-1 flex justify-end gap-2.5 border-t border-line pt-4">
+          <button type="button" onClick={onClose} className="btn-ghost">
             Bekor qilish
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              backgroundColor: '#3b82f6',
-              textTransform: 'none',
-              fontWeight: 700,
-              px: 3,
-              borderRadius: 2,
-              '&:hover': { backgroundColor: '#2563eb' },
-            }}
-          >
+          </button>
+          <button type="submit" className="btn-primary">
             Saqlash
-          </Button>
-        </DialogActions>
+          </button>
+        </div>
       </form>
-    </Dialog>
+    </Modal>
   );
 };
 

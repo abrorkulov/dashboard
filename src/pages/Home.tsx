@@ -1,35 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
-  Paper,
-  LinearProgress,
-} from '@mui/material';
-import PeopleIcon from '@mui/icons-material/People';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import AddIcon from '@mui/icons-material/Add';
-import DownloadIcon from '@mui/icons-material/Download';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import StorefrontIcon from '@mui/icons-material/Storefront';
-import PhoneIcon from '@mui/icons-material/Phone';
-import TopHeader from '../components/TopHeader';
+  ArrowRight,
+  Building2,
+  Download,
+  MapPin,
+  Phone,
+  Plus,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
+import PageHeader from '../components/PageHeader';
 import RecordDetailModal from '../components/RecordDetailModal';
 import AddRecordModal from '../components/AddRecordModal';
 import Modal from '../components/Modal';
+import StatusBadge from '../components/StatusBadge';
+import StatusSelect from '../components/StatusSelect';
+import MemberAvatar from '../components/MemberAvatar';
+import { STATUS_FLOW } from '../statuses/statuses';
+import { countStatuses, useStatusMap } from '../statuses/statusStore';
 import type { BusinessRecord, TeamMember } from '../data/teamData';
 import {
   allBusinessRecords,
@@ -44,571 +33,402 @@ const Home = () => {
   const [selectedRecord, setSelectedRecord] = useState<BusinessRecord | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [selectedCityFilter, setSelectedCityFilter] = useState<string>('all');
+  const [cityFilter, setCityFilter] = useState<string>('all');
+
+  const statusMap = useStatusMap();
+  const funnel = countStatuses(records.map((r) => r.id), statusMap);
 
   const stats = [
     {
-      title: 'Jami Bizneslar',
-      value: `${records.length} ta`,
+      title: 'Jami bizneslar',
+      value: String(records.length),
       sub: 'Baza toʻliq yuklandi',
-      icon: <AssessmentIcon sx={{ fontSize: 32, color: '#38bdf8' }} />,
-      color: '#3b82f6',
-      bgGlow: 'rgba(59, 130, 246, 0.15)',
+      icon: Building2,
+      tint: 'bg-brand-50 text-brand-600',
     },
     {
-      title: 'Jamoa Aʼzolari',
+      title: 'Jamoa aʼzolari',
       value: `${allTeamMembers.length} kishi`,
       sub: 'Barcha aʼzolar faol',
-      icon: <PeopleIcon sx={{ fontSize: 32, color: '#a78bfa' }} />,
-      color: '#8b5cf6',
-      bgGlow: 'rgba(139, 92, 246, 0.15)',
+      icon: Users,
+      tint: 'bg-violet-50 text-violet-600',
     },
     {
-      title: 'Qamrab Olingan Shaharlar',
-      value: `${summaryStats.citiesCount} shahar`,
+      title: 'Qamrab olingan shaharlar',
+      value: String(summaryStats.citiesCount),
       sub: 'Toshkent, Buxoro, Qarshi...',
-      icon: <LocationCityIcon sx={{ fontSize: 32, color: '#f472b6' }} />,
-      color: '#ec4899',
-      bgGlow: 'rgba(236, 72, 153, 0.15)',
+      icon: MapPin,
+      tint: 'bg-rose-50 text-rose-500',
     },
     {
-      title: 'Aloqa Aniqligi',
+      title: 'Aloqa aniqligi',
       value: `${summaryStats.verifiedPercentage}%`,
       sub: 'Telefon raqamlar tasdiqlangan',
-      icon: <TrendingUpIcon sx={{ fontSize: 32, color: '#34d399' }} />,
-      color: '#10b981',
-      bgGlow: 'rgba(16, 185, 129, 0.15)',
+      icon: TrendingUp,
+      tint: 'bg-emerald-50 text-emerald-600',
     },
   ];
 
-  const handleAddNewRecord = (newRecord: BusinessRecord) => {
-    setRecords((prev) => [newRecord, ...prev]);
-  };
+  const quickActions = [
+    { label: 'Yangi biznes qoʻshish', icon: Plus, onClick: () => setIsAddModalOpen(true), primary: true },
+    { label: 'CSV / Excel eksport', icon: Download, onClick: () => exportToCSV(records, 'bizneslar-eksport.csv') },
+    { label: 'Barcha bizneslar', icon: Building2, onClick: () => navigate('/records') },
+    { label: 'Jamoa maʼlumotlari', icon: Users, onClick: () => navigate('/team') },
+  ];
 
-  const filteredRecentRecords = records
-    .filter((r) => selectedCityFilter === 'all' || r.city.toLowerCase() === selectedCityFilter.toLowerCase())
+  const filteredRecent = records
+    .filter((r) => cityFilter === 'all' || r.city.toLowerCase() === cityFilter.toLowerCase())
     .slice(0, 10);
 
+  const funnelTotal = records.length || 1;
+
   return (
-    <Box sx={{ width: '100%' }}>
-      <TopHeader
-        title="Admin Dashboard"
-        subtitle="Bizneslar bazasi va jamoa faoliyati boʻyicha tezkor umumiy koʻrinish"
+    <div>
+      <PageHeader
+        title="Asosiy panel"
+        subtitle="Bizneslar bazasi va jamoa faoliyati boʻyicha umumiy koʻrinish"
         onAddNewClick={() => setIsAddModalOpen(true)}
       />
 
-      {/* KPI Stats Grid */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {stats.map((stat, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card
-              className="glow-card"
-              sx={{
-                backgroundColor: '#121b2d',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: 3.5,
-                p: 2.5,
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
-              <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                  <Box>
-                    <Typography variant="body2" sx={{ color: '#94a3b8', fontWeight: 600, mb: 0.5 }}>
-                      {stat.title}
-                    </Typography>
-                    <Typography variant="h4" sx={{ color: '#ffffff', fontWeight: 800, letterSpacing: '-0.5px' }}>
-                      {stat.value}
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      p: 1.5,
-                      borderRadius: 2.5,
-                      backgroundColor: stat.bgGlow,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    {stat.icon}
-                  </Box>
-                </Box>
-                <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 }}>
-                  {stat.sub}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+      {/* KPI kartalar */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map(({ title, value, sub, icon: Icon, tint }) => (
+          <div key={title} className="card p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-ink-soft">{title}</p>
+                <p className="mt-1.5 text-2xl font-bold tracking-tight text-ink">{value}</p>
+              </div>
+              <span className={`flex size-11 shrink-0 items-center justify-center rounded-xl ${tint}`}>
+                <Icon size={20} />
+              </span>
+            </div>
+            <p className="mt-3 text-xs text-ink-muted">{sub}</p>
+          </div>
         ))}
-      </Grid>
+      </div>
 
-      {/* Quick Action Buttons */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2, color: '#f8fafc', fontWeight: 700 }}>
-          Tezkor Amallar
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => setIsAddModalOpen(true)}
-              startIcon={<AddIcon />}
-              sx={{
-                backgroundColor: '#2563eb',
-                py: 1.8,
-                borderRadius: 2.5,
-                textTransform: 'none',
-                fontWeight: 700,
-                fontSize: '0.95rem',
-                boxShadow: '0 4px 16px rgba(37, 99, 235, 0.3)',
-                '&:hover': { backgroundColor: '#1d4ed8' },
-              }}
-            >
-              Yangi Biznes Qoʻshish
-            </Button>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => exportToCSV(records, 'bizneslar-eksport.csv')}
-              startIcon={<DownloadIcon />}
-              sx={{
-                backgroundColor: '#059669',
-                py: 1.8,
-                borderRadius: 2.5,
-                textTransform: 'none',
-                fontWeight: 700,
-                fontSize: '0.95rem',
-                boxShadow: '0 4px 16px rgba(5, 150, 105, 0.3)',
-                '&:hover': { backgroundColor: '#047857' },
-              }}
-            >
-              CSV / Excel ga Eksport
-            </Button>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => navigate('/records')}
-              startIcon={<StorefrontIcon />}
-              sx={{
-                backgroundColor: '#7c3aed',
-                py: 1.8,
-                borderRadius: 2.5,
-                textTransform: 'none',
-                fontWeight: 700,
-                fontSize: '0.95rem',
-                boxShadow: '0 4px 16px rgba(124, 58, 237, 0.3)',
-                '&:hover': { backgroundColor: '#6d28d9' },
-              }}
-            >
-              Barcha 282+ Bizneslar
-            </Button>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => navigate('/team')}
-              startIcon={<PeopleIcon />}
-              sx={{
-                backgroundColor: '#0284c7',
-                py: 1.8,
-                borderRadius: 2.5,
-                textTransform: 'none',
-                fontWeight: 700,
-                fontSize: '0.95rem',
-                boxShadow: '0 4px 16px rgba(2, 132, 199, 0.3)',
-                '&:hover': { backgroundColor: '#0369a1' },
-              }}
-            >
-              Jamoa Maʼlumotlari
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
+      {/* Sotuv bosqichlari (statuslar) */}
+      <section className="mt-6 card p-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="section-title">Sotuv bosqichlari</h2>
+            <p className="mt-0.5 text-sm text-ink-soft">
+              Har bir biznesning hozirgi statusi — batafsil oynadan oʻzgartirsa boʻladi
+            </p>
+          </div>
+          <span className="rounded-full bg-canvas px-3 py-1 text-xs font-semibold text-ink-soft">
+            Jami {records.length} ta
+          </span>
+        </div>
 
-      {/* Team Members Performance Section */}
-      <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Box>
-            <Typography variant="h6" sx={{ color: '#f8fafc', fontWeight: 700 }}>
-              Jamoa Aʼzolari va Yozuvlar
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#94a3b8' }}>
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {STATUS_FLOW.map((s) => {
+            const count = funnel[s.key];
+            const percent = Math.round((count / funnelTotal) * 100);
+            return (
+              <div key={s.key} className="rounded-xl border border-line bg-canvas p-3.5">
+                <div className="flex items-center gap-2">
+                  <span className={`size-2 rounded-full ${s.dot}`} />
+                  <span className="truncate text-xs font-semibold text-ink-soft">{s.label}</span>
+                </div>
+                <div className="mt-2 flex items-baseline gap-1.5">
+                  <span className="text-xl font-bold text-ink">{count}</span>
+                  <span className="text-xs text-ink-muted">{percent}%</span>
+                </div>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
+                  <div
+                    className={`h-full rounded-full ${s.track}`}
+                    style={{ width: `${percent}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Tezkor amallar */}
+      <section className="mt-6">
+        <h2 className="section-title mb-3">Tezkor amallar</h2>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {quickActions.map(({ label, icon: Icon, onClick, primary }) => (
+            <button
+              key={label}
+              type="button"
+              onClick={onClick}
+              className={`card flex items-center gap-3 p-4 text-left text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-pop ${
+                primary ? 'text-brand-700' : 'text-ink'
+              }`}
+            >
+              <span
+                className={`flex size-9 items-center justify-center rounded-xl ${
+                  primary ? 'bg-brand-600 text-white' : 'bg-canvas text-ink-soft'
+                }`}
+              >
+                <Icon size={17} />
+              </span>
+              {label}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Jamoa jadvali */}
+      <section className="mt-6">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="section-title">Jamoa aʼzolari va yozuvlar</h2>
+            <p className="text-sm text-ink-soft">
               Istalgan aʼzoga bosib, uning barcha yozuvlarini oching
-            </Typography>
-          </Box>
-          <Button
+            </p>
+          </div>
+          <button
+            type="button"
             onClick={() => navigate('/team')}
-            endIcon={<ArrowForwardIcon />}
-            sx={{ color: '#38bdf8', textTransform: 'none', fontWeight: 600 }}
+            className="btn-ghost !px-2 !py-1.5 text-brand-600 hover:bg-brand-50 hover:text-brand-700"
           >
-            Jamoa sahifasiga oʻtish
-          </Button>
-        </Box>
+            Jamoa sahifasi
+            <ArrowRight size={15} />
+          </button>
+        </div>
 
-        <Paper
-          sx={{
-            backgroundColor: '#121b2d',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: 3.5,
-            overflow: 'hidden',
-          }}
-        >
-          <TableContainer>
-            <Table>
-              <TableHead sx={{ backgroundColor: '#16223b' }}>
-                <TableRow>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Jamoa Aʼzosi</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Hudud</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Yozuvlar Soni</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Hissa</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8, textAlign: 'right' }}>Amal</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {allTeamMembers.map((member) => {
-                  const share = Math.round((member.recordsCount / allBusinessRecords.length) * 100);
-                  return (
-                    <TableRow
-                      key={member.id}
-                      hover
-                      onClick={() => setSelectedMember(member)}
-                      sx={{
-                        cursor: 'pointer',
-                        transition: 'background 0.2s',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                        '&:hover': { backgroundColor: 'rgba(59, 130, 246, 0.08)' },
-                      }}
-                    >
-                      <TableCell sx={{ color: '#ffffff', py: 1.6 }}>
-                        <Box>
-                          <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#f8fafc' }}>
-                            {member.name}
-                          </Typography>
-                          <Typography variant="caption" sx={{ color: '#64748b' }}>
-                            {member.role}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell sx={{ py: 1.6 }}>
-                        <Chip
-                          label={member.city}
-                          size="small"
-                          sx={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                            color: '#cbd5e1',
-                            fontWeight: 600,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell sx={{ py: 1.6 }}>
-                        <Chip
-                          label={`${member.recordsCount} ta biznes`}
-                          size="small"
-                          sx={{
-                            backgroundColor: `${member.color}25`,
-                            color: member.color,
-                            fontWeight: 700,
-                            border: `1px solid ${member.color}50`,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell sx={{ py: 1.6, minWidth: 150 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                          <LinearProgress
-                            variant="determinate"
-                            value={share}
-                            sx={{
-                              flex: 1,
-                              height: 6,
-                              borderRadius: 3,
-                              backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                              '& .MuiLinearProgress-bar': { backgroundColor: member.color },
-                            }}
-                          />
-                          <Typography variant="caption" sx={{ color: '#94a3b8', fontWeight: 600 }}>
-                            {share}%
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell sx={{ py: 1.6, textAlign: 'right' }}>
-                        <Button
-                          size="small"
-                          variant="outlined"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedMember(member);
-                          }}
-                          sx={{
-                            textTransform: 'none',
-                            color: '#38bdf8',
-                            borderColor: 'rgba(56, 189, 248, 0.3)',
-                            fontSize: '0.8rem',
-                            fontWeight: 600,
-                            borderRadius: 2,
-                            '&:hover': {
-                              backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                              borderColor: '#38bdf8',
-                            },
-                          }}
-                        >
-                          Bazasini ochish
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Box>
-
-      {/* Recent Business Records Section */}
-      <Box>
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 2,
-            mb: 2,
-          }}
-        >
-          <Box>
-            <Typography variant="h6" sx={{ color: '#f8fafc', fontWeight: 700 }}>
-              Soʻnggi Qoʻshilgan Bizneslar
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#94a3b8' }}>
-              Istalgan biznesga bosib, uning telefon raqamini nusxalash yoki xaritadan koʻrish mumkin
-            </Typography>
-          </Box>
-
-          {/* City filter chips */}
-          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            <Chip
-              label="Barchasi"
-              onClick={() => setSelectedCityFilter('all')}
-              clickable
-              sx={{
-                backgroundColor: selectedCityFilter === 'all' ? '#3b82f6' : '#16223b',
-                color: selectedCityFilter === 'all' ? '#fff' : '#94a3b8',
-                fontWeight: 600,
-              }}
-            />
-            {summaryStats.cities.slice(0, 4).map((city) => (
-              <Chip
-                key={city}
-                label={city}
-                onClick={() => setSelectedCityFilter(city)}
-                clickable
-                sx={{
-                  backgroundColor: selectedCityFilter === city ? '#3b82f6' : '#16223b',
-                  color: selectedCityFilter === city ? '#fff' : '#94a3b8',
-                  fontWeight: 600,
-                }}
-              />
-            ))}
-          </Box>
-        </Box>
-
-        <Paper
-          sx={{
-            backgroundColor: '#121b2d',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: 3.5,
-            overflow: 'hidden',
-          }}
-        >
-          <TableContainer>
-            <Table>
-              <TableHead sx={{ backgroundColor: '#16223b' }}>
-                <TableRow>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Biznes Nomi</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Kategoriya</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Telefon</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Shahar / Manzil</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8 }}>Masʼul Aʼzo</TableCell>
-                  <TableCell sx={{ color: '#94a3b8', fontWeight: 700, py: 1.8, textAlign: 'right' }}>Amal</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredRecentRecords.map((item) => (
-                  <TableRow
-                    key={item.id}
-                    hover
-                    onClick={() => setSelectedRecord(item)}
-                    sx={{
-                      cursor: 'pointer',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                      '&:hover': { backgroundColor: 'rgba(59, 130, 246, 0.08)' },
-                    }}
+        <div className="card overflow-x-auto">
+          <table className="w-full min-w-[720px] text-sm">
+            <thead>
+              <tr className="border-b border-line">
+                <th className="table-head px-4 py-3 text-left">Jamoa aʼzosi</th>
+                <th className="table-head px-4 py-3 text-left">Hudud</th>
+                <th className="table-head px-4 py-3 text-left">Yozuvlar soni</th>
+                <th className="table-head px-4 py-3 text-left">Hissasi</th>
+                <th className="table-head px-4 py-3 text-right">Amal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allTeamMembers.map((member) => {
+                const share = Math.round((member.recordsCount / allBusinessRecords.length) * 100);
+                return (
+                  <tr
+                    key={member.id}
+                    onClick={() => setSelectedMember(member)}
+                    className="cursor-pointer border-b border-line last:border-0 transition-colors hover:bg-canvas"
                   >
-                    <TableCell sx={{ py: 1.6 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 700, color: '#ffffff' }}>
-                        {item.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell sx={{ py: 1.6 }}>
-                      <Chip
-                        label={item.category}
-                        size="small"
-                        sx={{
-                          backgroundColor: 'rgba(56, 189, 248, 0.12)',
-                          color: '#38bdf8',
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell sx={{ py: 1.6, color: '#4ade80', fontWeight: 600, fontSize: '0.85rem' }}>
-                      {item.phone ? (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
-                          <PhoneIcon sx={{ fontSize: 16 }} />
-                          {item.phone}
-                        </Box>
-                      ) : (
-                        <Typography variant="caption" sx={{ color: '#64748b' }}>
-                          Mavjud emas
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell sx={{ py: 1.6, color: '#94a3b8', fontSize: '0.82rem', maxWidth: 220 }}>
-                      <Box sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {item.address || item.city}
-                      </Box>
-                    </TableCell>
-                    <TableCell sx={{ py: 1.6 }}>
-                      <Chip
-                        label={item.member}
-                        size="small"
-                        sx={{ backgroundColor: 'rgba(255, 255, 255, 0.08)', color: '#cbd5e1' }}
-                      />
-                    </TableCell>
-                    <TableCell sx={{ py: 1.6, textAlign: 'right' }}>
-                      <Button
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedRecord(item);
-                        }}
-                        sx={{ textTransform: 'none', color: '#38bdf8', fontWeight: 600, fontSize: '0.8rem' }}
-                      >
-                        Batafsil
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <MemberAvatar name={member.name} color={member.color} size={36} fontSize="0.75rem" />
+                        <div>
+                          <div className="font-semibold text-ink">{member.name}</div>
+                          <div className="text-xs text-ink-muted">{member.role}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="rounded-lg bg-canvas px-2 py-1 text-xs font-medium text-ink-soft">
+                        {member.city}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="rounded-lg bg-brand-50 px-2 py-1 text-xs font-semibold text-brand-700">
+                        {member.recordsCount} ta biznes
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex min-w-[140px] items-center gap-2">
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-line">
+                          <div
+                            className="h-full rounded-full bg-brand-500"
+                            style={{ width: `${share}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-semibold text-ink-soft">{share}%</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <span className="text-xs font-semibold text-brand-600">Bazasini ochish →</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-          <Button
-            variant="outlined"
-            onClick={() => navigate('/records')}
-            endIcon={<ArrowForwardIcon />}
-            sx={{
-              color: '#38bdf8',
-              borderColor: 'rgba(56, 189, 248, 0.4)',
-              textTransform: 'none',
-              fontWeight: 700,
-              px: 3,
-              py: 1,
-              borderRadius: 2.5,
-              '&:hover': { backgroundColor: 'rgba(56, 189, 248, 0.1)', borderColor: '#38bdf8' },
-            }}
-          >
-            Barcha {records.length} ta biznesni toʻliq koʻrish
-          </Button>
-        </Box>
-      </Box>
+      {/* Soʻnggi qoʻshilgan bizneslar */}
+      <section className="mt-6">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="section-title">Soʻnggi qoʻshilgan bizneslar</h2>
+            <p className="text-sm text-ink-soft">
+              Bosib — telefon raqamini nusxalash, xaritada koʻrish yoki statusni oʻzgartirish mumkin
+            </p>
+          </div>
 
-      {/* Record detail modal */}
+          {/* Shahar filtri */}
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setCityFilter('all')}
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                cityFilter === 'all'
+                  ? 'bg-brand-600 text-white'
+                  : 'border border-line bg-surface text-ink-soft hover:bg-canvas'
+              }`}
+            >
+              Barchasi
+            </button>
+            {summaryStats.cities.slice(0, 4).map((city) => (
+              <button
+                key={city}
+                type="button"
+                onClick={() => setCityFilter(city)}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  cityFilter === city
+                    ? 'bg-brand-600 text-white'
+                    : 'border border-line bg-surface text-ink-soft hover:bg-canvas'
+                }`}
+              >
+                {city}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="card overflow-x-auto">
+          <table className="w-full min-w-[860px] text-sm">
+            <thead>
+              <tr className="border-b border-line">
+                <th className="table-head px-4 py-3 text-left">Biznes nomi</th>
+                <th className="table-head px-4 py-3 text-left">Kategoriya</th>
+                <th className="table-head px-4 py-3 text-left">Telefon</th>
+                <th className="table-head px-4 py-3 text-left">Shahar / manzil</th>
+                <th className="table-head px-4 py-3 text-left">Masʼul aʼzo</th>
+                <th className="table-head px-4 py-3 text-left">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredRecent.map((item) => (
+                <tr
+                  key={item.id}
+                  onClick={() => setSelectedRecord(item)}
+                  className="cursor-pointer border-b border-line last:border-0 transition-colors hover:bg-canvas"
+                >
+                  <td className="px-4 py-3 font-semibold text-ink">{item.name}</td>
+                  <td className="px-4 py-3">
+                    <span className="rounded-lg bg-brand-50 px-2 py-1 text-xs font-medium text-brand-700">
+                      {item.category}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    {item.phone ? (
+                      <span className="inline-flex items-center gap-1.5 font-medium text-emerald-700">
+                        <Phone size={14} />
+                        {item.phone}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-ink-muted">Mavjud emas</span>
+                    )}
+                  </td>
+                  <td className="max-w-[220px] truncate px-4 py-3 text-ink-soft">
+                    {item.address || item.city}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="rounded-lg bg-canvas px-2 py-1 text-xs font-medium text-ink-soft">
+                      {item.member}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                    <StatusSelect recordId={item.id} />
+                  </td>
+                </tr>
+              ))}
+              {filteredRecent.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-sm text-ink-muted">
+                    Bu shahar boʻyicha yozuv topilmadi.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-4 flex justify-center">
+          <button type="button" onClick={() => navigate('/records')} className="btn-secondary">
+            Barcha {records.length} ta biznesni koʻrish
+            <ArrowRight size={15} />
+          </button>
+        </div>
+      </section>
+
+      {/* Biznes tafsilotlari */}
       <RecordDetailModal record={selectedRecord} onClose={() => setSelectedRecord(null)} />
 
-      {/* Team Member data modal */}
+      {/* Aʼzo bazasi */}
       {selectedMember && (
         <Modal
-          isOpen={Boolean(selectedMember)}
+          isOpen
           onClose={() => setSelectedMember(null)}
-          title={
-            <Box>
-              <span>{selectedMember.name} — Barcha Bizneslar</span>
-            </Box>
-          }
+          title={`${selectedMember.name} — barcha bizneslar`}
           subtitle={`${selectedMember.city} • Jami ${selectedMember.records.length} ta biznes roʻyxati`}
         >
-          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ color: '#94a3b8' }}>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm text-ink-soft">
               Istalgan kartochkaga bosib, aloqa yoki xaritani koʻring
-            </Typography>
-            <Button
-              size="small"
-              variant="outlined"
-              onClick={() => exportToCSV(selectedMember.records, `${selectedMember.name}-bizneslar.csv`)}
-              startIcon={<DownloadIcon />}
-              sx={{ color: '#38bdf8', borderColor: 'rgba(56, 189, 248, 0.3)', textTransform: 'none' }}
+            </p>
+            <button
+              type="button"
+              onClick={() =>
+                exportToCSV(selectedMember.records, `${selectedMember.name}-bizneslar.csv`)
+              }
+              className="btn-secondary !py-2 !text-xs"
             >
-              Ushbu aʼzo maʼlumotlarini yuklab olish
-            </Button>
-          </Box>
-          <Grid container spacing={2}>
+              <Download size={14} />
+              CSV yuklab olish
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {selectedMember.records.map((rec) => (
-              <Grid key={rec.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <Card
-                  onClick={() => setSelectedRecord(rec)}
-                  sx={{
-                    p: 2,
-                    backgroundColor: '#121b2d',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: 2.5,
-                    cursor: 'pointer',
-                    '&:hover': { borderColor: '#3b82f6', transform: 'translateY(-2px)' },
-                    transition: 'all 0.2s',
-                  }}
-                >
-                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#fff', mb: 0.5 }}>
-                    {rec.name}
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: '#38bdf8', display: 'block', mb: 1 }}>
-                    {rec.category}
-                  </Typography>
-                  {rec.phone && (
-                    <Typography variant="body2" sx={{ color: '#4ade80', fontSize: '0.8rem', mb: 0.5 }}>
-                      📞 {rec.phone}
-                    </Typography>
-                  )}
-                  {rec.address && (
-                    <Typography variant="caption" sx={{ color: '#94a3b8', display: 'block' }}>
-                      📍 {rec.address}
-                    </Typography>
-                  )}
-                </Card>
-              </Grid>
+              <button
+                key={rec.id}
+                type="button"
+                onClick={() => setSelectedRecord(rec)}
+                className="rounded-xl border border-line bg-surface p-3.5 text-left transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-sm font-semibold text-ink">{rec.name}</span>
+                  <StatusBadge status={statusMap[rec.id] ?? 'yangi'} size="sm" />
+                </div>
+                <span className="mt-1 block text-xs font-medium text-brand-600">
+                  {rec.category}
+                </span>
+                {rec.phone && (
+                  <span className="mt-1.5 flex items-center gap-1 text-xs text-ink-soft">
+                    <Phone size={12} />
+                    {rec.phone}
+                  </span>
+                )}
+                {rec.address && (
+                  <span className="mt-1 flex items-center gap-1 text-xs text-ink-muted">
+                    <MapPin size={12} />
+                    <span className="truncate">{rec.address}</span>
+                  </span>
+                )}
+              </button>
             ))}
-          </Grid>
+          </div>
         </Modal>
       )}
 
-      {/* Add New Record Modal */}
+      {/* Yangi biznes qoʻshish */}
       <AddRecordModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddNewRecord}
+        onAdd={(newRecord) => setRecords((prev) => [newRecord, ...prev])}
       />
-    </Box>
+
+    </div>
   );
 };
 

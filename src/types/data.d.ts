@@ -13,6 +13,11 @@ declare module '*/Asadbek' {
   export default data;
 }
 
+declare module '*/Bilol' {
+  const data: any[];
+  export default data;
+}
+
 declare module '*/Ibrohim' {
   const data: any[];
   export default data;
@@ -29,6 +34,11 @@ declare module '*/Javlon' {
 }
 
 declare module '*/Kamol' {
+  const data: any[];
+  export default data;
+}
+
+declare module '*/Mohi' {
   const data: any[];
   export default data;
 }

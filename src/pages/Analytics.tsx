@@ -1,28 +1,20 @@
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  LinearProgress,
-  Chip,
-} from '@mui/material';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
-import PeopleIcon from '@mui/icons-material/People';
-import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import TopHeader from '../components/TopHeader';
+import { BadgeCheck, MapPin, PhoneCall, Users } from 'lucide-react';
+import PageHeader from '../components/PageHeader';
+import { STATUS_FLOW } from '../statuses/statuses';
+import { countStatuses, useStatusMap } from '../statuses/statusStore';
 import { allBusinessRecords, allTeamMembers, summaryStats } from '../data/teamData';
 
 const Analytics = () => {
-  // Compute city distribution
+  const statusMap = useStatusMap();
+
+  // Shaharlar bo'yicha taqsimot
   const cityCounts: Record<string, number> = {};
   allBusinessRecords.forEach((r) => {
     cityCounts[r.city] = (cityCounts[r.city] || 0) + 1;
   });
-
   const cityList = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]);
 
-  // Compute category distribution (top 6)
+  // Kategoriyalar bo'yicha taqsimot (top 6)
   const categoryCounts: Record<string, number> = {};
   allBusinessRecords.forEach((r) => {
     categoryCounts[r.category] = (categoryCounts[r.category] || 0) + 1;
@@ -32,254 +24,170 @@ const Analytics = () => {
     .slice(0, 6);
 
   const phoneValidCount = allBusinessRecords.filter((r) => r.phone && r.phone.length > 5).length;
-  const _addressValidCount = allBusinessRecords.filter((r) => r.address && r.address.length > 3).length;
-  const _webValidCount = allBusinessRecords.filter((r) => Boolean(r.link)).length;
+
+  // Sotuv bosqichlari
+  const funnel = countStatuses(
+    allBusinessRecords.map((r) => r.id),
+    statusMap
+  );
+  const funnelTotal = allBusinessRecords.length || 1;
+
+  const kpis = [
+    {
+      label: 'Jami bizneslar',
+      value: String(summaryStats.totalRecords),
+      note: '100% faol yozuvlar',
+      noteColor: 'text-success-700',
+      icon: BadgeCheck,
+      tint: 'bg-brand-50 text-brand-600',
+    },
+    {
+      label: 'Telefon qamrovi',
+      value: `${Math.round((phoneValidCount / allBusinessRecords.length) * 100)}%`,
+      note: `${phoneValidCount} ta yozuvda aloqa bor`,
+      noteColor: 'text-brand-600',
+      icon: PhoneCall,
+      tint: 'bg-violet-50 text-violet-600',
+    },
+    {
+      label: 'Qamrab olingan shaharlar',
+      value: String(cityList.length),
+      note: 'Toshkent, Buxoro, Qarshi va b.',
+      noteColor: 'text-rose-500',
+      icon: MapPin,
+      tint: 'bg-rose-50 text-rose-500',
+    },
+    {
+      label: 'Jamoa samaradorligi',
+      value: `~${Math.round(summaryStats.totalRecords / summaryStats.totalMembers)}`,
+      note: 'Har bir aʼzoga oʻrtacha',
+      noteColor: 'text-emerald-600',
+      icon: Users,
+      tint: 'bg-emerald-50 text-emerald-600',
+    },
+  ];
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <TopHeader
-        title="Statistika va Tahlil"
+    <div>
+      <PageHeader
+        title="Statistika va tahlil"
         subtitle="Bizneslar bazasi boʻyicha toʻliq tahliliy koʻrsatkichlar"
       />
 
-      {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card
-            sx={{
-              backgroundColor: '#121b2d',
-              border: '1px solid rgba(59, 130, 246, 0.2)',
-              borderRadius: 3,
-              p: 2.5,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="body2" sx={{ color: '#94a3b8', fontWeight: 600 }}>
-                Jami Bizneslar
-              </Typography>
-              <VerifiedIcon sx={{ color: '#3b82f6' }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 800, color: '#fff', mb: 0.5 }}>
-              {summaryStats.totalRecords}
-            </Typography>
-            <Typography variant="caption" sx={{ color: '#22c55e', fontWeight: 600 }}>
-              100% faol yozuvlar
-            </Typography>
-          </Card>
-        </Grid>
+      {/* KPI kartalar */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {kpis.map(({ label, value, note, noteColor, icon: Icon, tint }) => (
+          <div key={label} className="card p-5">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm font-medium text-ink-soft">{label}</span>
+              <span className={`flex size-9 items-center justify-center rounded-xl ${tint}`}>
+                <Icon size={17} />
+              </span>
+            </div>
+            <p className="mt-2 text-2xl font-bold tracking-tight text-ink">{value}</p>
+            <p className={`mt-1 text-xs font-medium ${noteColor}`}>{note}</p>
+          </div>
+        ))}
+      </div>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card
-            sx={{
-              backgroundColor: '#121b2d',
-              border: '1px solid rgba(139, 92, 246, 0.2)',
-              borderRadius: 3,
-              p: 2.5,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="body2" sx={{ color: '#94a3b8', fontWeight: 600 }}>
-                Telefon Qamrovi
-              </Typography>
-              <PhoneInTalkIcon sx={{ color: '#8b5cf6' }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 800, color: '#fff', mb: 0.5 }}>
-              {Math.round((phoneValidCount / allBusinessRecords.length) * 100)}%
-            </Typography>
-            <Typography variant="caption" sx={{ color: '#a78bfa' }}>
-              {phoneValidCount} ta yozuvda aloqa bor
-            </Typography>
-          </Card>
-        </Grid>
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Sotuv bosqichlari */}
+        <section className="card p-5 lg:col-span-2">
+          <h2 className="section-title">Sotuv bosqichlari (statuslar boʻyicha)</h2>
+          <p className="mt-0.5 text-sm text-ink-soft">
+            Jami {funnelTotal} ta biznesning qaysi bosqichda turgani
+          </p>
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {STATUS_FLOW.map((s) => {
+              const count = funnel[s.key];
+              const percent = Math.round((count / funnelTotal) * 100);
+              return (
+                <div key={s.key} className="rounded-xl border border-line bg-canvas p-4">
+                  <div className="flex items-center gap-2">
+                    <span className={`size-2 rounded-full ${s.dot}`} />
+                    <span className="truncate text-xs font-semibold text-ink-soft">{s.label}</span>
+                  </div>
+                  <p className="mt-2 text-2xl font-bold text-ink">{count}</p>
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line">
+                    <div className={`h-full rounded-full ${s.track}`} style={{ width: `${percent}%` }} />
+                  </div>
+                  <p className="mt-1.5 text-[11px] text-ink-muted">{s.hint}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card
-            sx={{
-              backgroundColor: '#121b2d',
-              border: '1px solid rgba(236, 72, 153, 0.2)',
-              borderRadius: 3,
-              p: 2.5,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="body2" sx={{ color: '#94a3b8', fontWeight: 600 }}>
-                Qamrab Olingan Shaharlar
-              </Typography>
-              <LocationCityIcon sx={{ color: '#ec4899' }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 800, color: '#fff', mb: 0.5 }}>
-              {cityList.length}
-            </Typography>
-            <Typography variant="caption" sx={{ color: '#f472b6' }}>
-              Toshkent, Buxoro, Qarshi va b.
-            </Typography>
-          </Card>
-        </Grid>
+        {/* Shaharlar bo'yicha taqsimot */}
+        <section className="card p-5">
+          <h2 className="section-title mb-4">Shaharlar boʻyicha taqsimot</h2>
+          <div className="flex flex-col gap-3.5">
+            {cityList.map(([cityName, count]) => {
+              const percent = Math.round((count / allBusinessRecords.length) * 100);
+              return (
+                <div key={cityName}>
+                  <div className="mb-1.5 flex items-center justify-between text-sm">
+                    <span className="font-medium text-ink">{cityName}</span>
+                    <span className="text-ink-soft">
+                      {count} ta ({percent}%)
+                    </span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-line">
+                    <div className="h-full rounded-full bg-brand-500" style={{ width: `${percent}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <Card
-            sx={{
-              backgroundColor: '#121b2d',
-              border: '1px solid rgba(16, 185, 129, 0.2)',
-              borderRadius: 3,
-              p: 2.5,
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-              <Typography variant="body2" sx={{ color: '#94a3b8', fontWeight: 600 }}>
-                Jamoa Samaradorligi
-              </Typography>
-              <PeopleIcon sx={{ color: '#10b981' }} />
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 800, color: '#fff', mb: 0.5 }}>
-              ~{Math.round(summaryStats.totalRecords / summaryStats.totalMembers)}
-            </Typography>
-            <Typography variant="caption" sx={{ color: '#34d399' }}>
-              Har bir aʼzoga oʻrtacha
-            </Typography>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Charts / Progress bars section */}
-      <Grid container spacing={3}>
-        {/* City distribution */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card
-            sx={{
-              backgroundColor: '#121b2d',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: 3,
-              p: 3,
-            }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', mb: 2.5 }}>
-              Shaharlar Boʻyicha Taqsimot
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.2 }}>
-              {cityList.map(([cityName, count]) => {
-                const percent = Math.round((count / allBusinessRecords.length) * 100);
-                return (
-                  <Box key={cityName}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.8 }}>
-                      <Typography variant="body2" sx={{ color: '#e2e8f0', fontWeight: 600 }}>
-                        {cityName}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: '#94a3b8' }}>
-                        {count} ta ({percent}%)
-                      </Typography>
-                    </Box>
-                    <LinearProgress
-                      variant="determinate"
-                      value={percent}
-                      sx={{
-                        height: 8,
-                        borderRadius: 4,
-                        backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: '#3b82f6',
-                          borderRadius: 4,
-                        },
-                      }}
+        {/* Jamoa hissasi */}
+        <section className="card p-5">
+          <h2 className="section-title mb-4">Jamoa aʼzolari hissasi</h2>
+          <div className="flex flex-col gap-3.5">
+            {allTeamMembers.map((m) => {
+              const percent = Math.round((m.recordsCount / allBusinessRecords.length) * 100);
+              return (
+                <div key={m.id}>
+                  <div className="mb-1.5 flex items-center justify-between text-sm">
+                    <span className="font-medium text-ink">{m.name}</span>
+                    <span className="text-ink-soft">
+                      {m.recordsCount} ta ({percent}%)
+                    </span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-line">
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${percent}%`, backgroundColor: m.color }}
                     />
-                  </Box>
-                );
-              })}
-            </Box>
-          </Card>
-        </Grid>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
-        {/* Member contributions */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card
-            sx={{
-              backgroundColor: '#121b2d',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: 3,
-              p: 3,
-            }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', mb: 2.5 }}>
-              Jamoa Aʼzolari Hissasi
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {allTeamMembers.map((m) => {
-                const percent = Math.round((m.recordsCount / allBusinessRecords.length) * 100);
-                return (
-                  <Box key={m.id}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.6 }}>
-                      <Typography variant="body2" sx={{ color: '#e2e8f0', fontWeight: 600 }}>
-                        {m.name}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: '#94a3b8' }}>
-                        {m.recordsCount} ta ({percent}%)
-                      </Typography>
-                    </Box>
-                    <LinearProgress
-                      variant="determinate"
-                      value={percent}
-                      sx={{
-                        height: 8,
-                        borderRadius: 4,
-                        backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: m.color,
-                          borderRadius: 4,
-                        },
-                      }}
-                    />
-                  </Box>
-                );
-              })}
-            </Box>
-          </Card>
-        </Grid>
-
-        {/* Top categories */}
-        <Grid size={{ xs: 12 }}>
-          <Card
-            sx={{
-              backgroundColor: '#121b2d',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: 3,
-              p: 3,
-            }}
-          >
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#fff', mb: 2.5 }}>
-              Eng Ommabop Kategoriyalar
-            </Typography>
-            <Grid container spacing={2}>
-              {topCategories.map(([category, count]) => (
-                <Grid key={category} size={{ xs: 12, sm: 6, md: 4 }}>
-                  <Box
-                    sx={{
-                      p: 2,
-                      backgroundColor: '#16223b',
-                      borderRadius: 2.5,
-                      border: '1px solid rgba(255, 255, 255, 0.05)',
-                    }}
-                  >
-                    <Typography variant="subtitle2" sx={{ color: '#f8fafc', fontWeight: 700, mb: 1 }}>
-                      {category}
-                    </Typography>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Chip
-                        label={`${count} ta yozuv`}
-                        size="small"
-                        sx={{ backgroundColor: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', fontWeight: 600 }}
-                      />
-                      <Typography variant="caption" sx={{ color: '#94a3b8' }}>
-                        {Math.round((count / allBusinessRecords.length) * 100)}% ulush
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </Card>
-        </Grid>
-      </Grid>
-    </Box>
+        {/* Ommabop kategoriyalar */}
+        <section className="card p-5 lg:col-span-2">
+          <h2 className="section-title mb-4">Eng ommabop kategoriyalar</h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {topCategories.map(([category, count]) => (
+              <div key={category} className="rounded-xl border border-line bg-canvas p-4">
+                <p className="text-sm font-semibold text-ink">{category}</p>
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="rounded-lg bg-brand-50 px-2 py-1 text-xs font-semibold text-brand-700">
+                    {count} ta yozuv
+                  </span>
+                  <span className="text-xs text-ink-muted">
+                    {Math.round((count / allBusinessRecords.length) * 100)}% ulush
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
   );
 };
 

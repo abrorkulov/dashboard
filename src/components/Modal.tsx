@@ -1,6 +1,5 @@
-import React from 'react';
-import { Dialog, DialogTitle, DialogContent, IconButton, Typography, Box } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useEffect } from 'react';
+import { X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -8,76 +7,72 @@ interface ModalProps {
   title: React.ReactNode;
   subtitle?: React.ReactNode;
   children: React.ReactNode;
-  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
+const widths: Record<NonNullable<ModalProps['maxWidth']>, string> = {
+  sm: 'max-w-md',
+  md: 'max-w-xl',
+  lg: 'max-w-3xl',
+  xl: 'max-w-5xl',
+};
+
+/** Umumiy modallar oynasi (dialog) */
 const Modal = ({ isOpen, onClose, title, subtitle, children, maxWidth = 'lg' }: ModalProps) => {
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
   return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
-      maxWidth={maxWidth}
-      fullWidth
-      slotProps={{
-        paper: {
-          sx: {
-            backgroundColor: '#0f172a',
-            color: '#f8fafc',
-            borderRadius: '20px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
-            maxHeight: '90vh',
-            backgroundImage: 'none',
-          },
-        },
-        backdrop: {
-          sx: {
-            backgroundColor: 'rgba(5, 8, 16, 0.8)',
-            backdropFilter: 'blur(8px)',
-          },
-        },
-      }}
-    >
-      <DialogTitle
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          px: 3,
-          py: 2.2,
-          backgroundColor: '#131d33',
-        }}
-      >
-        <Box>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: '#f8fafc', fontSize: '1.25rem' }}>
-            {title}
-          </Typography>
-          {subtitle && (
-            <Typography variant="body2" sx={{ color: '#94a3b8', mt: 0.5, fontSize: '0.875rem' }}>
-              {subtitle}
-            </Typography>
-          )}
-        </Box>
-        <IconButton
-          onClick={onClose}
-          sx={{
-            color: '#94a3b8',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              color: '#ffffff',
-            },
-          }}
-          size="small"
+    <div className="fixed inset-0 z-50 overflow-y-auto">
+      {/* Fon */}
+      <div
+        className="fixed inset-0 bg-ink/40 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden
+      />
+
+      {/* Oyna */}
+      <div className="relative flex min-h-full items-start justify-center p-4 sm:p-6">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className={`relative w-full ${widths[maxWidth]} rounded-2xl border border-line bg-surface shadow-pop`}
         >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent sx={{ p: 3, overflowY: 'auto' }}>
-        {children}
-      </DialogContent>
-    </Dialog>
+          {/* Sarlavha */}
+          <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
+            <div className="min-w-0">
+              <div className="text-base font-bold tracking-tight text-ink sm:text-lg">{title}</div>
+              {subtitle && <div className="mt-0.5 text-sm text-ink-soft">{subtitle}</div>}
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="btn-ghost shrink-0 !p-2"
+              aria-label="Yopish"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Kontent */}
+          <div className="max-h-[calc(100vh-11rem)] overflow-y-auto p-5">{children}</div>
+        </div>
+      </div>
+    </div>
   );
 };
 

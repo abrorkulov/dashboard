@@ -1,10 +1,12 @@
 import abdullohData from './Abdulloh.js';
 import abdumajidData from './Abdumajid.js';
 import asadbekData from './Asadbek.js';
+import bilolData from './Bilol.js';
 import ibrohimData from './Ibrohim.js';
 import ilyosxojaData from './Ilyosxoja.js';
 import javlonData from './Javlon.js';
 import kamolData from './Kamol.js';
+import mohiData from './Mohi.js';
 import zohirshohData from './Zohirshoh.js';
 
 export interface BusinessRecord {
@@ -43,6 +45,9 @@ function detectCity(text: string, fallback: string): string {
   if (lower.includes('qarshi') || lower.includes('карши') || lower.includes('qashqadaryo')) return 'Qarshi';
   if (lower.includes('andijon') || lower.includes('андижан')) return 'Andijon';
   if (lower.includes('farg') || lower.includes('ферган')) return 'Fargʻona';
+  if (lower.includes('chirchiq')) return 'Chirchiq';
+  if (lower.includes('qorgontepa')) return 'Qoʻrgʻontepa';
+  if (lower.includes('urganch') || lower.includes('xorazm')) return 'Urganch';
   return fallback;
 }
 
@@ -96,6 +101,28 @@ const asadbekRecords: BusinessRecord[] = (asadbekData || []).map((item: any, idx
   note: [item.digital_status, item.offer].filter(Boolean).join(' • '),
   status: item.verification === 'confirmed' ? 'verified' : 'pending',
   priority: item.priority || 'Oʻrta',
+  raw: item,
+}));
+
+// Normalize Bilol (Toshkent restoran, mehmonxona va bizneslar)
+const bilolRecords: BusinessRecord[] = (bilolData || []).map((item: any, idx: number) => ({
+  id: `bilol-${item.id || idx + 1}`,
+  member: 'Bilol',
+  name: item.business || 'Nomsiz biznes',
+  category: /hotel|mehmonxona/i.test(item.business || '')
+    ? 'Mehmonxona'
+    : /restaurant|restoran|cafe|kafe|qozon|taom|food/i.test(item.business || '')
+    ? 'Restoran & Kafe'
+    : /fitness|spa/i.test(item.business || '')
+    ? 'Sport & SPA'
+    : /shop|store|market|mall|bazaar/i.test(item.business || '')
+    ? 'Savdo & Doʻkon'
+    : 'Biznes & Xizmatlar',
+  phone: item.phone || '',
+  address: item.region || '',
+  city: /region/i.test(item.region || '') ? 'Toshkent viloyati' : detectCity(item.region, 'Toshkent'),
+  note: [item.email, item.instagram].filter(Boolean).join(' • '),
+  status: item.phone ? 'verified' : 'pending',
   raw: item,
 }));
 
@@ -179,6 +206,19 @@ const kamolRecords: BusinessRecord[] = (kamolData || []).map((item: any, idx: nu
   raw: item,
 }));
 
+// Normalize Mohi (onlayn / ijtimoiy tarmoq bizneslari)
+const mohiRecords: BusinessRecord[] = (mohiData || []).map((item: any, idx: number) => ({
+  id: `mohi-${idx + 1}`,
+  member: 'Mohi',
+  name: item.name || 'Nomsiz biznes',
+  category: item.category || 'Boshqa',
+  phone: item.phone || '',
+  address: '',
+  city: detectCity(item.name, 'Toshkent'),
+  status: item.phone ? 'verified' : 'pending',
+  raw: item,
+}));
+
 // Normalize Zohirshoh
 const zohirshohRecords: BusinessRecord[] = (zohirshohData || []).map((item: any, idx: number) => ({
   id: `zohir-${idx + 1}`,
@@ -196,10 +236,12 @@ export const allBusinessRecords: BusinessRecord[] = [
   ...abdullohRecords,
   ...abdumajidRecords,
   ...asadbekRecords,
+  ...bilolRecords,
   ...ibrohimRecords,
   ...ilyosxojaRecords,
   ...javlonRecords,
   ...kamolRecords,
+  ...mohiRecords,
   ...zohirshohRecords,
 ];
 
@@ -240,6 +282,17 @@ export const allTeamMembers: TeamMember[] = [
     recordsCount: asadbekRecords.length,
     categories: getCategories(asadbekRecords),
     records: asadbekRecords,
+  },
+  {
+    id: 'bilol',
+    name: 'Bilol',
+    role: 'Toshkent Restoran & Mehmonxona',
+    initials: 'BI',
+    color: '#f97316',
+    city: 'Toshkent',
+    recordsCount: bilolRecords.length,
+    categories: getCategories(bilolRecords),
+    records: bilolRecords,
   },
   {
     id: 'ibrohim',
@@ -284,6 +337,17 @@ export const allTeamMembers: TeamMember[] = [
     recordsCount: kamolRecords.length,
     categories: getCategories(kamolRecords),
     records: kamolRecords,
+  },
+  {
+    id: 'mohi',
+    name: 'Mohi',
+    role: 'Onlayn Savdo & Xizmatlar',
+    initials: 'MO',
+    color: '#a855f7',
+    city: 'Toshkent',
+    recordsCount: mohiRecords.length,
+    categories: getCategories(mohiRecords),
+    records: mohiRecords,
   },
   {
     id: 'zohirshoh',

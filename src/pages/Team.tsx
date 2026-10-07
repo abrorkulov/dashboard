@@ -1,403 +1,212 @@
 import { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardActionArea,
-  Chip,
-  Button,
-  TextField,
-  InputAdornment,
-} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import PhoneIcon from '@mui/icons-material/Phone';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import BusinessIcon from '@mui/icons-material/Business';
-import DownloadIcon from '@mui/icons-material/Download';
-import TopHeader from '../components/TopHeader';
+import { Download, MapPin, Phone, Search, Store } from 'lucide-react';
+import PageHeader from '../components/PageHeader';
 import Modal from '../components/Modal';
 import RecordDetailModal from '../components/RecordDetailModal';
+import StatusBadge from '../components/StatusBadge';
+import MemberAvatar from '../components/MemberAvatar';
+import { useStatusMap } from '../statuses/statusStore';
 import type { TeamMember, BusinessRecord } from '../data/teamData';
 import { allTeamMembers, exportToCSV } from '../data/teamData';
 
 const Team = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [memberSearchQuery, setMemberSearchQuery] = useState('');
-  const [modalSearchQuery, setModalSearchQuery] = useState('');
-  const [selectedDetailRecord, setSelectedDetailRecord] = useState<BusinessRecord | null>(null);
+  const [memberSearch, setMemberSearch] = useState('');
+  const [modalSearch, setModalSearch] = useState('');
+  const [detailRecord, setDetailRecord] = useState<BusinessRecord | null>(null);
 
-  const handleCardClick = (member: TeamMember) => {
+  const statusMap = useStatusMap();
+
+  const openMember = (member: TeamMember) => {
     setSelectedMember(member);
-    setModalSearchQuery('');
+    setModalSearch('');
     setIsModalOpen(true);
   };
 
   const filteredMembers = allTeamMembers.filter(
     (m) =>
-      m.name.toLowerCase().includes(memberSearchQuery.toLowerCase()) ||
-      m.city.toLowerCase().includes(memberSearchQuery.toLowerCase()) ||
-      m.role.toLowerCase().includes(memberSearchQuery.toLowerCase())
+      m.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
+      m.city.toLowerCase().includes(memberSearch.toLowerCase()) ||
+      m.role.toLowerCase().includes(memberSearch.toLowerCase())
   );
 
   const filteredMemberRecords = selectedMember
     ? selectedMember.records.filter((rec) => {
-        const query = modalSearchQuery.toLowerCase();
+        const q = modalSearch.toLowerCase();
         return (
-          rec.name.toLowerCase().includes(query) ||
-          rec.category.toLowerCase().includes(query) ||
-          rec.phone.toLowerCase().includes(query) ||
-          rec.address.toLowerCase().includes(query)
+          rec.name.toLowerCase().includes(q) ||
+          rec.category.toLowerCase().includes(q) ||
+          rec.phone.toLowerCase().includes(q) ||
+          rec.address.toLowerCase().includes(q)
         );
       })
     : [];
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <TopHeader
-        title="Jamoa Aʼzolari"
-        subtitle="7 nafar aʼzo tomonidan toʻplangan barcha biznes maʼlumotlari"
-        searchQuery={memberSearchQuery}
-        onSearchChange={setMemberSearchQuery}
+    <div>
+      <PageHeader
+        title="Jamoa aʼzolari"
+        subtitle={`${allTeamMembers.length} nafar aʼzo tomonidan toʻplangan barcha biznes maʼlumotlari`}
+        searchQuery={memberSearch}
+        onSearchChange={setMemberSearch}
+        searchPlaceholder="Aʼzo, shahar yoki lavozim boʻyicha qidirish..."
       />
 
-      <Typography variant="body2" sx={{ color: '#94a3b8', mb: 3 }}>
-        Jamoa aʼzosini tanlang va uning barcha kiritgan bizneslari, telefon raqamlari va manzillarini koʻring.
-      </Typography>
+      <p className="mb-5 text-sm text-ink-soft">
+        Jamoa aʼzosini tanlang va uning kiritgan bizneslari, telefon raqamlari va manzillarini
+        koʻring.
+      </p>
 
-      {/* Member Cards Grid */}
-      <Grid container spacing={3}>
+      {/* Aʼzolar kartalari */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {filteredMembers.map((member) => (
-          <Grid key={member.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-            <Card
-              className="glow-card"
-              sx={{
-                backgroundColor: '#121b2d',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: 3.5,
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                overflow: 'hidden',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                '&:hover': {
-                  borderColor: member.color,
-                  transform: 'translateY(-6px)',
-                  boxShadow: `0 12px 30px -8px ${member.color}40`,
-                },
-              }}
-            >
-              <CardActionArea
-                onClick={() => handleCardClick(member)}
-                sx={{ p: 3, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+          <div
+            key={member.id}
+            className="card flex flex-col p-5 transition-all hover:-translate-y-1 hover:shadow-pop"
+          >
+            <div className="flex flex-col items-center text-center">
+              <MemberAvatar name={member.name} color={member.color} size={56} fontSize="1.1rem" />
+              <h2 className="mt-3 text-base font-bold text-ink">{member.name}</h2>
+              <p className="mt-0.5 text-xs text-ink-muted">{member.role}</p>
+
+              <div className="mt-3 flex flex-wrap justify-center gap-2">
+                <span className="rounded-full px-2.5 py-1 text-xs font-semibold text-white"
+                  style={{ backgroundColor: member.color }}>
+                  {member.recordsCount} ta biznes
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-canvas px-2.5 py-1 text-xs font-medium text-ink-soft">
+                  <MapPin size={12} />
+                  {member.city}
+                </span>
+              </div>
+
+              <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+                {member.categories.slice(0, 3).map((cat) => (
+                  <span
+                    key={cat}
+                    className="rounded-lg bg-canvas px-2 py-0.5 text-[11px] text-ink-muted"
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-auto flex gap-2 border-t border-line pt-4">
+              <button type="button" onClick={() => openMember(member)} className="btn-primary flex-1 !py-2 !text-xs">
+                <Store size={14} />
+                Bazasini ochish
+              </button>
+              <button
+                type="button"
+                onClick={() => exportToCSV(member.records, `${member.name}-bizneslar.csv`)}
+                className="btn-secondary !px-3 !py-2"
+                title="CSV ga yuklash"
+                aria-label="CSV ga yuklash"
               >
-                <Typography variant="h6" sx={{ fontWeight: 800, color: '#f8fafc', mb: 0.5, textAlign: 'center' }}>
-                  {member.name}
-                </Typography>
-
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: '#94a3b8',
-                    textAlign: 'center',
-                    display: 'block',
-                    mb: 1.5,
-                    fontSize: '0.8rem',
-                  }}
-                >
-                  {member.role}
-                </Typography>
-
-                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                  <Chip
-                    label={`${member.recordsCount} ta biznes`}
-                    size="small"
-                    sx={{
-                      backgroundColor: member.color,
-                      color: '#ffffff',
-                      fontWeight: 700,
-                      fontSize: '0.75rem',
-                    }}
-                  />
-                  <Chip
-                    label={member.city}
-                    size="small"
-                    sx={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                      color: '#cbd5e1',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                    }}
-                  />
-                </Box>
-
-                {/* Categories badges */}
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.8, justifyContent: 'center', mt: 'auto' }}>
-                  {member.categories.slice(0, 3).map((cat) => (
-                    <Chip
-                      key={cat}
-                      label={cat}
-                      size="small"
-                      sx={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                        color: '#94a3b8',
-                        fontSize: '0.7rem',
-                        height: 22,
-                      }}
-                    />
-                  ))}
-                </Box>
-              </CardActionArea>
-
-              <Box sx={{ p: 2, borderTop: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', gap: 1 }}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  size="small"
-                  onClick={() => handleCardClick(member)}
-                  sx={{
-                    color: '#38bdf8',
-                    borderColor: 'rgba(56, 189, 248, 0.3)',
-                    textTransform: 'none',
-                    fontWeight: 700,
-                    borderRadius: 2,
-                    '&:hover': {
-                      backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                      borderColor: '#38bdf8',
-                    },
-                  }}
-                >
-                  Bazasini ochish
-                </Button>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => exportToCSV(member.records, `${member.name}-bizneslar.csv`)}
-                  sx={{
-                    color: '#94a3b8',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                    minWidth: 40,
-                    p: 0,
-                    borderRadius: 2,
-                    '&:hover': {
-                      color: '#fff',
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
-                    },
-                  }}
-                  title="CSV ga yuklash"
-                >
-                  <DownloadIcon fontSize="small" />
-                </Button>
-              </Box>
-            </Card>
-          </Grid>
+                <Download size={15} />
+              </button>
+            </div>
+          </div>
         ))}
-      </Grid>
 
-      {/* Member Data Modal */}
+        {filteredMembers.length === 0 && (
+          <div className="col-span-full card p-10 text-center text-sm text-ink-muted">
+            Aʼzo topilmadi.
+          </div>
+        )}
+      </div>
+
+      {/* Aʼzo bazasi modali */}
       {selectedMember && (
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           title={
-            <Box>
-              <Typography variant="h6" sx={{ fontWeight: 800, color: '#f8fafc', lineHeight: 1.2 }}>
-                {selectedMember.name} tomonidan kiritilgan bizneslar
-              </Typography>
-              <Typography variant="caption" sx={{ color: '#94a3b8' }}>
+            <>
+              {selectedMember.name} tomonidan kiritilgan bizneslar
+              <span className="mt-0.5 block text-xs font-normal text-ink-muted">
                 {selectedMember.role} • {selectedMember.city}
-              </Typography>
-            </Box>
+              </span>
+            </>
           }
           subtitle={`Jami ${selectedMember.recordsCount} ta biznes yozuvi`}
         >
-          {/* Modal Toolbar: Search and Export */}
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: 2,
-              mb: 3,
-              p: 2,
-              backgroundColor: '#111a2e',
-              borderRadius: 2.5,
-              border: '1px solid rgba(255, 255, 255, 0.06)',
-            }}
-          >
-            <TextField
-              size="small"
-              placeholder={`${selectedMember.name} bazasidan qidirish...`}
-              value={modalSearchQuery}
-              onChange={(e) => setModalSearchQuery(e.target.value)}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon sx={{ color: '#64748b', fontSize: 18 }} />
-                    </InputAdornment>
-                  ),
-                  sx: {
-                    color: '#fff',
-                    backgroundColor: '#16223b',
-                    borderRadius: 2,
-                    fontSize: '0.85rem',
-                    minWidth: 260,
-                  },
-                },
-              }}
-            />
-
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <Typography variant="body2" sx={{ color: '#94a3b8' }}>
-                Topildi: <strong style={{ color: '#fff' }}>{filteredMemberRecords.length}</strong> ta
-              </Typography>
-              <Button
-                size="small"
-                variant="contained"
-                startIcon={<DownloadIcon />}
+          {/* Qidiruv va eksport paneli */}
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-canvas p-3">
+            <div className="relative w-full sm:w-72">
+              <Search size={15} className="absolute top-1/2 left-3 -translate-y-1/2 text-ink-muted" />
+              <input
+                type="search"
+                value={modalSearch}
+                onChange={(e) => setModalSearch(e.target.value)}
+                placeholder={`${selectedMember.name} bazasidan qidirish...`}
+                className="input !py-2 !pl-9 !text-sm"
+                aria-label="Bazadan qidirish"
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-ink-soft">
+                Topildi: <strong className="text-ink">{filteredMemberRecords.length}</strong> ta
+              </span>
+              <button
+                type="button"
                 onClick={() => exportToCSV(selectedMember.records, `${selectedMember.name}-bizneslar.csv`)}
-                sx={{
-                  backgroundColor: '#10b981',
-                  color: '#fff',
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  borderRadius: 2,
-                  '&:hover': { backgroundColor: '#059669' },
-                }}
+                className="btn-primary !py-2 !text-xs"
               >
+                <Download size={14} />
                 CSV ga yuklash
-              </Button>
-            </Box>
-          </Box>
+              </button>
+            </div>
+          </div>
 
-          {/* Cards Grid of this member's data */}
           {filteredMemberRecords.length === 0 ? (
-            <Box sx={{ textAlign: 'center', py: 6 }}>
-              <Typography variant="body1" sx={{ color: '#94a3b8' }}>
-                Hech qanday biznes topilmadi.
-              </Typography>
-            </Box>
+            <p className="py-10 text-center text-sm text-ink-muted">Hech qanday biznes topilmadi.</p>
           ) : (
-            <Grid container spacing={2}>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {filteredMemberRecords.map((item) => (
-                <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                  <Card
-                    onClick={() => setSelectedDetailRecord(item)}
-                    sx={{
-                      backgroundColor: '#121b2d',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: 3,
-                      p: 2.2,
-                      cursor: 'pointer',
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      transition: 'all 0.2s',
-                      '&:hover': {
-                        borderColor: '#38bdf8',
-                        transform: 'translateY(-3px)',
-                        boxShadow: '0 8px 24px rgba(56, 189, 248, 0.15)',
-                      },
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.2, mb: 1.5 }}>
-                      <Box
-                        sx={{
-                          p: 0.8,
-                          borderRadius: 1.5,
-                          backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                          color: '#38bdf8',
-                          display: 'flex',
-                        }}
-                      >
-                        <BusinessIcon fontSize="small" />
-                      </Box>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ fontWeight: 700, color: '#f8fafc', fontSize: '0.95rem', lineHeight: 1.3 }}
-                        >
-                          {item.name}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{ color: '#38bdf8', fontWeight: 600, display: 'block', mt: 0.3 }}
-                        >
-                          {item.category}
-                        </Typography>
-                      </Box>
-                    </Box>
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setDetailRecord(item)}
+                  className="rounded-xl border border-line bg-surface p-4 text-left transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-sm font-semibold text-ink">{item.name}</span>
+                    <StatusBadge status={statusMap[item.id] ?? 'yangi'} size="sm" />
+                  </div>
+                  <span className="mt-1 block text-xs font-medium text-brand-600">
+                    {item.category}
+                  </span>
 
-                    {item.phone && (
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                        <PhoneIcon sx={{ color: '#4ade80', fontSize: 16 }} />
-                        <Typography variant="body2" sx={{ color: '#e2e8f0', fontSize: '0.82rem', fontWeight: 600 }}>
-                          {item.phone}
-                        </Typography>
-                      </Box>
-                    )}
+                  {item.phone && (
+                    <span className="mt-2 flex items-center gap-1.5 text-xs font-medium text-ink-soft">
+                      <Phone size={13} className="text-emerald-600" />
+                      {item.phone}
+                    </span>
+                  )}
+                  {item.address && (
+                    <span className="mt-1 flex items-start gap-1.5 text-xs text-ink-muted">
+                      <MapPin size={13} className="mt-0.5 shrink-0" />
+                      <span className="line-clamp-2">{item.address}</span>
+                    </span>
+                  )}
 
-                    {item.address && (
-                      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mt: 'auto', pt: 1 }}>
-                        <LocationOnIcon sx={{ color: '#94a3b8', fontSize: 16, mt: 0.2 }} />
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: '#94a3b8',
-                            fontSize: '0.78rem',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          {item.address}
-                        </Typography>
-                      </Box>
-                    )}
-
-                    <Box
-                      sx={{
-                        mt: 1.5,
-                        pt: 1.2,
-                        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Chip
-                        label="Batafsil maʼlumot"
-                        size="small"
-                        sx={{
-                          height: 20,
-                          fontSize: '0.68rem',
-                          backgroundColor: 'rgba(56, 189, 248, 0.12)',
-                          color: '#38bdf8',
-                          fontWeight: 600,
-                        }}
-                      />
-                      <Typography variant="caption" sx={{ color: '#38bdf8', fontWeight: 700, fontSize: '0.75rem' }}>
-                        Ochish →
-                      </Typography>
-                    </Box>
-                  </Card>
-                </Grid>
+                  <span className="mt-3 flex items-center justify-between border-t border-line pt-2.5 text-[11px] font-semibold">
+                    <span className="text-ink-muted">Batafsil</span>
+                    <span className="text-brand-600">Ochish →</span>
+                  </span>
+                </button>
               ))}
-            </Grid>
+            </div>
           )}
         </Modal>
       )}
 
-      {/* Detail Modal when any business card is clicked */}
-      <RecordDetailModal
-        record={selectedDetailRecord}
-        onClose={() => setSelectedDetailRecord(null)}
-      />
-    </Box>
+      {/* Biznes tafsilotlari */}
+      <RecordDetailModal record={detailRecord} onClose={() => setDetailRecord(null)} />
+    </div>
   );
 };
 
