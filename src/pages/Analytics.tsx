@@ -1,11 +1,11 @@
 import { BadgeCheck, MapPin, PhoneCall, Users } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
-import { STATUS_FLOW } from '../statuses/statuses';
-import { countStatuses, useStatusMap } from '../statuses/statusStore';
+import { countStatuses, useStatusFlow, useStatusMap } from '../statuses/statusStore';
 import { useAppData } from '../data/dataContext';
 
 const Analytics = () => {
   const statusMap = useStatusMap();
+  const statusFlow = useStatusFlow();
   const { records, members, stats } = useAppData();
 
   // Shaharlar bo'yicha taqsimot
@@ -29,7 +29,8 @@ const Analytics = () => {
   // Sotuv bosqichlari
   const funnel = countStatuses(
     records.map((r) => r.id),
-    statusMap
+    statusMap,
+    statusFlow.map((s) => s.key)
   );
   const funnelTotal = records.length || 1;
 
@@ -99,8 +100,8 @@ const Analytics = () => {
             Jami {funnelTotal} ta biznesning qaysi bosqichda turgani
           </p>
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {STATUS_FLOW.map((s) => {
-              const count = funnel[s.key];
+            {statusFlow.map((s) => {
+              const count = funnel[s.key] ?? 0;
               const percent = Math.round((count / funnelTotal) * 100);
               return (
                 <div key={s.key} className="rounded-xl border border-line bg-canvas p-4">

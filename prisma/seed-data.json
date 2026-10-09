@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-09T14:59:44.836Z",
+  "generatedAt": "2026-10-09T16:14:40.649Z",
   "stats": {
     "totalRecords": 482,
     "totalMembers": 11,
@@ -18,7 +18,7 @@
       "Urganch",
       "Fargʻona"
     ],
-    "instagramCount": 50
+    "instagramCount": 110
   },
   "members": [
     {
@@ -9765,6 +9765,986 @@
         "phone": "+998 71 277-00-11",
         "location": "Ташкент, Чиланзарский р-н, массив Чиланзар-1, 65/32",
         "category": "Магазин одежды",
+        "__order": 20
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Skandalist Restoran",
+      "username": "skandalist.tashkent",
+      "phone": "+998 33 222 00 11",
+      "address": "Toshkent sh., Mirobod t., Istiqbol k., 8",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Skandalist Restoran",
+        "username": "@skandalist.tashkent",
+        "phone": "+998 33 222 00 11",
+        "location": "Toshkent sh., Mirobod t., Istiqbol k., 8",
+        "website": "Yo'q",
+        "__order": 1
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "TezTarget Marketing Agentligi",
+      "username": "teztarget",
+      "phone": "+998 50 990 88 22",
+      "address": "Toshkent sh., Bektemir t., Billur daxasi, 54",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "TezTarget Marketing Agentligi",
+        "username": "@teztarget",
+        "phone": "+998 50 990 88 22",
+        "location": "Toshkent sh., Bektemir t., Billur daxasi, 54",
+        "website": "Yo'q",
+        "__order": 2
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Hyper Floor (Beton Pollar)",
+      "username": "hyper.floor",
+      "phone": "+998 99 437 30 33",
+      "address": "Toshkent sh., Mirobod t., Toshkent k., 10/4002",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Hyper Floor (Beton Pollar)",
+        "username": "@hyper.floor",
+        "phone": "+998 99 437 30 33",
+        "location": "Toshkent sh., Mirobod t., Toshkent k., 10/4002",
+        "website": "Yo'q",
+        "__order": 3
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Level Talantlar Maktabi",
+      "username": "level_talantmaktabi",
+      "phone": "+998 93 505 22 33",
+      "address": "Toshkent sh., Olmazor t., Qoraqamish k.",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Level Talantlar Maktabi",
+        "username": "@level_talantmaktabi",
+        "phone": "+998 93 505 22 33",
+        "location": "Toshkent sh., Olmazor t., Qoraqamish k.",
+        "website": "Yo'q",
+        "__order": 4
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Qamish Xorazm Taomlari Restorani",
+      "username": "qamish_restaurant",
+      "phone": "+998 99 888 11 22",
+      "address": "Toshkent sh., Yunusobod t., A.Temur k.",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Qamish Xorazm Taomlari Restorani",
+        "username": "@qamish_restaurant",
+        "phone": "+998 99 888 11 22",
+        "location": "Toshkent sh., Yunusobod t., A.Temur k.",
+        "website": "Yo'q",
+        "__order": 5
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Cake Bake Pecarnya",
+      "username": "cakebake_by_multimafe",
+      "phone": "+998 71 200 00 55",
+      "address": "Toshkent sh., Shayxontohur t., Labzak k.",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Cake Bake Pecarnya",
+        "username": "@cakebake_by_multimafe",
+        "phone": "+998 71 200 00 55",
+        "location": "Toshkent sh., Shayxontohur t., Labzak k.",
+        "website": "Yo'q",
+        "__order": 6
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Proex Sud-Ekspertiza Tashkiloti",
+      "username": "proex.uz",
+      "phone": "+998 71 200 44 55",
+      "address": "Toshkent sh., Mirobod t., Nukus k.",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Proex Sud-Ekspertiza Tashkiloti",
+        "username": "@proex.uz",
+        "phone": "+998 71 200 44 55",
+        "location": "Toshkent sh., Mirobod t., Nukus k.",
+        "website": "Yo'q",
+        "__order": 7
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Rent Media Group (RMG)",
+      "username": "rmg_uz",
+      "phone": "+998 90 900 12 34",
+      "address": "Toshkent sh., Yakkasaroy t., Shota Rustaveli k.",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Rent Media Group (RMG)",
+        "username": "@rmg_uz",
+        "phone": "+998 90 900 12 34",
+        "location": "Toshkent sh., Yakkasaroy t., Shota Rustaveli k.",
+        "website": "Yo'q",
+        "__order": 8
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Kamolon Somsa Osh Markazi",
+      "username": "kamolon_somsa",
+      "phone": "+998 90 901 01 01",
+      "address": "Toshkent sh., Shayxontohur t., Kamolon k., 4",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Kamolon Somsa Osh Markazi",
+        "username": "@kamolon_somsa",
+        "phone": "+998 90 901 01 01",
+        "location": "Toshkent sh., Shayxontohur t., Kamolon k., 4",
+        "website": "Yo'q",
+        "__order": 9
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "G'ijduvon Shashlikxonasi",
+      "username": "gijduvon_shashlik_tashkent",
+      "phone": "+998 93 555 66 77",
+      "address": "Toshkent sh., Olmazor t., Sebzor k., 15",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "G'ijduvon Shashlikxonasi",
+        "username": "@gijduvon_shashlik_tashkent",
+        "phone": "+998 93 555 66 77",
+        "location": "Toshkent sh., Olmazor t., Sebzor k., 15",
+        "website": "Yo'q",
+        "__order": 10
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Brothers Burger Fast Food",
+      "username": "brothers_burger_uz",
+      "phone": "+998 90 120 30 40",
+      "address": "Toshkent sh., Chilonzor t., Chilanzar k., 2A",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Brothers Burger Fast Food",
+        "username": "@brothers_burger_uz",
+        "phone": "+998 90 120 30 40",
+        "location": "Toshkent sh., Chilonzor t., Chilanzar k., 2A",
+        "website": "Yo'q",
+        "__order": 11
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Chust Tovuqlari Qovurilgan Tovuq",
+      "username": "chust_tovuqlari",
+      "phone": "+998 90 808 11 22",
+      "address": "Toshkent sh., Chilonzor t., Muqimiy k., 18",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Chust Tovuqlari Qovurilgan Tovuq",
+        "username": "@chust_tovuqlari",
+        "phone": "+998 90 808 11 22",
+        "location": "Toshkent sh., Chilonzor t., Muqimiy k., 18",
+        "website": "Yo'q",
+        "__order": 12
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Central Coffee Kofexona",
+      "username": "central_coffee_tashkent",
+      "phone": "+998 90 333 44 55",
+      "address": "Toshkent sh., Mirobod t., Taras Shevchenko k., 21",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Central Coffee Kofexona",
+        "username": "@central_coffee_tashkent",
+        "phone": "+998 90 333 44 55",
+        "location": "Toshkent sh., Mirobod t., Taras Shevchenko k., 21",
+        "website": "Yo'q",
+        "__order": 13
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "BarberShop Tashkent Sartaroshxonasi",
+      "username": "barbershop_tashkent",
+      "phone": "+998 90 955 44 33",
+      "address": "Toshkent sh., Mirobod t., Chexov k., 19",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "BarberShop Tashkent Sartaroshxonasi",
+        "username": "@barbershop_tashkent",
+        "phone": "+998 90 955 44 33",
+        "location": "Toshkent sh., Mirobod t., Chexov k., 19",
+        "website": "Yo'q",
+        "__order": 14
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Toza Gilam Yuvish Xizmati",
+      "username": "toza_gilam_uz",
+      "phone": "+998 71 200 55 66",
+      "address": "Toshkent sh., Sergeli t., Sanoat zonasi, 8-doxa",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Toza Gilam Yuvish Xizmati",
+        "username": "@toza_gilam_uz",
+        "phone": "+998 71 200 55 66",
+        "location": "Toshkent sh., Sergeli t., Sanoat zonasi, 8-doxa",
+        "website": "Yo'q",
+        "__order": 15
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Flower City Gul Do'koni",
+      "username": "flowercity_tashkent",
+      "phone": "+998 90 911 00 22",
+      "address": "Toshkent sh., Mirzo Ulug'bek t., Mustaqillik k., 78",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Flower City Gul Do'koni",
+        "username": "@flowercity_tashkent",
+        "phone": "+998 90 911 00 22",
+        "location": "Toshkent sh., Mirzo Ulug'bek t., Mustaqillik k., 78",
+        "website": "Yo'q",
+        "__order": 16
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Halol Go'sht Qassobxonasi",
+      "username": "halol_gosht_tashkent",
+      "phone": "+998 99 300 44 55",
+      "address": "Toshkent sh., Yashnobod t., Tuzel 2-mavze, 10",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Halol Go'sht Qassobxonasi",
+        "username": "@halol_gosht_tashkent",
+        "phone": "+998 99 300 44 55",
+        "location": "Toshkent sh., Yashnobod t., Tuzel 2-mavze, 10",
+        "website": "Yo'q",
+        "__order": 17
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Lazzat Tandir Nonvoyxonasi",
+      "username": "lazzat_tandir",
+      "phone": "+998 90 123 45 67",
+      "address": "Toshkent sh., Chilonzor t., 5-mavze, 12",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Lazzat Tandir Nonvoyxonasi",
+        "username": "@lazzat_tandir",
+        "phone": "+998 90 123 45 67",
+        "location": "Toshkent sh., Chilonzor t., 5-mavze, 12",
+        "website": "Yo'q",
+        "__order": 18
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "Erudit Xususiy Bog'chasi",
+      "username": "erudit_kindergarten",
+      "phone": "+998 90 315 20 20",
+      "address": "Toshkent sh., Mirzo Ulug'bek t., Buyuk Ipak Yo'li k., 112",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "Erudit Xususiy Bog'chasi",
+        "username": "@erudit_kindergarten",
+        "phone": "+998 90 315 20 20",
+        "location": "Toshkent sh., Mirzo Ulug'bek t., Buyuk Ipak Yo'li k., 112",
+        "website": "Yo'q",
+        "__order": 19
+      }
+    },
+    {
+      "source": "Abdulloh",
+      "name": "VetCare Veterinariya Klinikasi",
+      "username": "vetcare_tashkent",
+      "phone": "+998 71 256 78 90",
+      "address": "Toshkent sh., Mirobod t., Shahrisabz k., 40",
+      "category": "Instagram biznes",
+      "raw": {
+        "business": "VetCare Veterinariya Klinikasi",
+        "username": "@vetcare_tashkent",
+        "phone": "+998 71 256 78 90",
+        "location": "Toshkent sh., Mirobod t., Shahrisabz k., 40",
+        "website": "Yo'q",
+        "__order": 20
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "pokoscake.toshkent",
+      "username": "pokoscake.toshkent",
+      "phone": "+998 94 926 29 23",
+      "address": "Domashniy, Beltepa 1",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 1,
+        "name": "pokoscake.toshkent",
+        "location": "Domashniy, Beltepa 1",
+        "phone": "949262923",
+        "instagram": "pokoscake.toshkent",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 1
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "romano__uz",
+      "username": "romano__uz",
+      "phone": "200005005",
+      "address": "Toshkent, Tashkucha 144-Б",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 2,
+        "name": "romano__uz",
+        "location": "Toshkent, Tashkucha 144-Б",
+        "phone": "200005005",
+        "instagram": "romano__uz",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 2
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "swisswatch_premium",
+      "username": "swisswatch_premium",
+      "phone": "885007000",
+      "address": "Toshkent, Ly angarskaya ko‘chasi 12",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 3,
+        "name": "swisswatch_premium",
+        "location": "Toshkent, Ly angarskaya ko‘chasi 12",
+        "phone": "885007000",
+        "instagram": "swisswatch_premium",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 3
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "nicy_chirchiq",
+      "username": "nicy_chirchiq",
+      "phone": "+998 93 504 91 14",
+      "address": "Chirchiq",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 4,
+        "name": "nicy_chirchiq",
+        "location": "Chirchiq",
+        "phone": "935049114",
+        "instagram": "nicy_chirchiq",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 4
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "ifoshka_style",
+      "username": "ifoshka_style",
+      "phone": "+998 93 708 38 81",
+      "address": "Chilonzor, 16-mavze, 24-uy",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 5,
+        "name": "ifoshka_style",
+        "location": "Chilonzor, 16-mavze, 24-uy",
+        "phone": "937083881",
+        "instagram": "ifoshka_style",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 5
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "decoratoruz",
+      "username": "decoratoruz",
+      "phone": "+998 91 997 13 04",
+      "address": "Toshkent",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 6,
+        "name": "decoratoruz",
+        "location": "Toshkent",
+        "phone": "919971304",
+        "instagram": "decoratoruz",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 6
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "sampi_silver",
+      "username": "sampi_silver",
+      "phone": "+998 90 914 88 78",
+      "address": "Toshkent, Yunusobod, Bog‘ishamol 260A",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 7,
+        "name": "sampi_silver",
+        "location": "Toshkent, Yunusobod, Bog‘ishamol 260A",
+        "phone": "909148878",
+        "instagram": "sampi_silver",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 7
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "satoshi_sushii",
+      "username": "satoshi_sushii",
+      "phone": "+998 91 064 88 88",
+      "address": "Toshkent",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 8,
+        "name": "satoshi_sushii",
+        "location": "Toshkent",
+        "phone": "910648888",
+        "instagram": "satoshi_sushii",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 8
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "mazami.uz",
+      "username": "mazami.uz",
+      "phone": "+998 94 994 01 01",
+      "address": "Yunusobod Gallery",
+      "category": "Instagram biznes",
+      "description": "Raqam foydalanuvchi kiritgan",
+      "raw": {
+        "id": 9,
+        "name": "mazami.uz",
+        "location": "Yunusobod Gallery",
+        "phone": "949940101",
+        "instagram": "mazami.uz",
+        "phone_validation": "user_provided_unverified",
+        "source": "User-provided",
+        "__order": 9
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Pirogi.uz",
+      "username": "pirogi",
+      "phone": "+998 94 682 11 22",
+      "address": "Toshkent, Maxtumquli ko‘chasi 3/6",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan • https://www.afisha.uz/uz/places/pekarnya-pirogiuz",
+      "raw": {
+        "id": 10,
+        "name": "Pirogi.uz",
+        "location": "Toshkent, Maxtumquli ko‘chasi 3/6",
+        "phone": "+998 94 682 11 22",
+        "instagram": "pirogi",
+        "phone_validation": "format_checked_public_listing_not_call_verified",
+        "source": "https://www.afisha.uz/uz/places/pekarnya-pirogiuz",
+        "__order": 10
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Baked Art Bakery",
+      "username": "Baked Art Bakery",
+      "phone": "+998 99 170 22 24",
+      "address": "Toshkent",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan • https://www.restaurants10.com/UZ/Tashkent/106867541803250/Baked-Art-Bakery",
+      "raw": {
+        "id": 11,
+        "name": "Baked Art Bakery",
+        "location": "Toshkent",
+        "phone": "+998 99 170 22 24",
+        "instagram": null,
+        "phone_validation": "format_checked_public_listing_not_call_verified",
+        "source": "https://www.restaurants10.com/UZ/Tashkent/106867541803250/Baked-Art-Bakery",
+        "__order": 11
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Soul Artisan Bakery",
+      "username": "soulbakery_uz",
+      "phone": "+998 97 184 66 88",
+      "address": "Toshkent, Parkent ko‘chasi 219",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan • https://happynew.day/vendor/soul-artisan-bakery",
+      "raw": {
+        "id": 12,
+        "name": "Soul Artisan Bakery",
+        "location": "Toshkent, Parkent ko‘chasi 219",
+        "phone": "+998 97 184 66 88",
+        "instagram": "soulbakery_uz",
+        "phone_validation": "format_checked_public_listing_not_call_verified",
+        "source": "https://happynew.day/vendor/soul-artisan-bakery",
+        "__order": 12
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Silk Road Handmade Store",
+      "username": "silkroad.uz",
+      "phone": "+998 90 911 96 85",
+      "address": "Toshkent, Buyuk Turon ko‘chasi 73",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan • https://wanderlog.com/place/details/10387570/silk-road-handmade-store",
+      "raw": {
+        "id": 13,
+        "name": "Silk Road Handmade Store",
+        "location": "Toshkent, Buyuk Turon ko‘chasi 73",
+        "phone": "+998 90 911 96 85",
+        "instagram": "silkroad.uz",
+        "phone_validation": "format_checked_public_listing_not_call_verified",
+        "source": "https://wanderlog.com/place/details/10387570/silk-road-handmade-store",
+        "__order": 13
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Midas Bakery",
+      "username": "midasbakery",
+      "phone": "+998 97 100 58 68",
+      "address": "Toshkent, Buyuk Ipak Yo‘li ko‘chasi 152",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan • https://www.afisha.uz/uz/places/midas-bakery",
+      "raw": {
+        "id": 14,
+        "name": "Midas Bakery",
+        "location": "Toshkent, Buyuk Ipak Yo‘li ko‘chasi 152",
+        "phone": "+998 97 100 58 68",
+        "instagram": "midasbakery",
+        "phone_validation": "format_checked_public_listing_not_call_verified",
+        "source": "https://www.afisha.uz/uz/places/midas-bakery",
+        "__order": 14
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Vkuslandiya by Ayva",
+      "username": "Vkuslandiya by Ayva",
+      "phone": "+998 77 300 74 84",
+      "address": "Toshkent (12 ta filial, saytida ko‘rsatilgan)",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan • https://vkuslandiya.uz/",
+      "raw": {
+        "id": 15,
+        "name": "Vkuslandiya by Ayva",
+        "location": "Toshkent (12 ta filial, saytida ko‘rsatilgan)",
+        "phone": "+998 77 300 74 84",
+        "instagram": null,
+        "phone_validation": "format_checked_official_site_not_call_verified",
+        "source": "https://vkuslandiya.uz/",
+        "__order": 15
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Zefir Butik Konditer",
+      "username": "zefir.butik.konditer",
+      "phone": "+998 91 788 99 00; +998 99 755 99 00; +998 95 881 37 32",
+      "address": "Yunusobod, Bog‘ishamol ko‘chasi 3; Mirzo Ulug‘bek, Oltintepa 365",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan • https://zefir.market/page/contacts?lang=uz",
+      "raw": {
+        "id": 16,
+        "name": "Zefir Butik Konditer",
+        "location": "Yunusobod, Bog‘ishamol ko‘chasi 3; Mirzo Ulug‘bek, Oltintepa 365",
+        "phone": "+998 91 788 99 00; +998 99 755 99 00; +998 95 881 37 32",
+        "instagram": "zefir.butik.konditer",
+        "phone_validation": "format_checked_official_site_not_call_verified",
+        "source": "https://zefir.market/page/contacts?lang=uz",
+        "__order": 16
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "CARDAMOM Artisan Bakery & Café",
+      "username": "cardamom.ab",
+      "phone": "+998 95 120 01 05",
+      "address": "Toshkent",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan • https://cardamomartisanbakery.com/",
+      "raw": {
+        "id": 17,
+        "name": "CARDAMOM Artisan Bakery & Café",
+        "location": "Toshkent",
+        "phone": "+998 95 120 01 05",
+        "instagram": "cardamom.ab",
+        "phone_validation": "format_checked_official_site_not_call_verified",
+        "source": "https://cardamomartisanbakery.com/",
+        "__order": 17
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Art House",
+      "username": "Art House",
+      "phone": "+998 71 233 35 15",
+      "address": "Toshkent, Sadik Azimov ko‘chasi 1",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan",
+      "raw": {
+        "id": 18,
+        "name": "Art House",
+        "location": "Toshkent, Sadik Azimov ko‘chasi 1",
+        "phone": "+998 71 233 35 15",
+        "instagram": null,
+        "phone_validation": "format_checked_business_listing_not_call_verified",
+        "source": "Business listing search result",
+        "__order": 18
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "ALSET store",
+      "username": "ALSET store",
+      "phone": "+998 99 838 42 24",
+      "address": "Toshkent, Kiyot massivi 49",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan",
+      "raw": {
+        "id": 19,
+        "name": "ALSET store",
+        "location": "Toshkent, Kiyot massivi 49",
+        "phone": "+998 99 838 42 24",
+        "instagram": null,
+        "phone_validation": "format_checked_business_listing_not_call_verified",
+        "source": "Business listing search result",
+        "__order": 19
+      }
+    },
+    {
+      "source": "Mohi",
+      "name": "Said’s Ceramics",
+      "username": "Said’s Ceramics",
+      "phone": "+998 90 303 00 39",
+      "address": "Toshkent, Eski Juva bozori, 86HM+5H5",
+      "category": "Instagram biznes",
+      "description": "Raqam formati tekshirilgan",
+      "raw": {
+        "id": 20,
+        "name": "Said’s Ceramics",
+        "location": "Toshkent, Eski Juva bozori, 86HM+5H5",
+        "phone": "+998 90 303 00 39",
+        "instagram": null,
+        "phone_validation": "format_checked_business_listing_not_call_verified",
+        "source": "Business listing search result",
+        "__order": 20
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Santander Nest One (барбершоп)",
+      "phone": "+998 88 555-33-44",
+      "address": "Ташкент, ул. Ботира Закирова, 1А/1, 12 этаж",
+      "category": "Барбершоп",
+      "raw": {
+        "name": "Santander Nest One (барбершоп)",
+        "phone-number": "+998 88 555-33-44",
+        "location": "Ташкент, ул. Ботира Закирова, 1А/1, 12 этаж",
+        "business": "Барбершоп",
+        "__order": 1
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "23:59 Barbershop",
+      "phone": "+998 77 577-23-59",
+      "address": "Ташкент, Юнусабадский район, массив Минор, 90",
+      "category": "Барбершоп",
+      "raw": {
+        "name": "23:59 Barbershop",
+        "phone-number": "+998 77 577-23-59",
+        "location": "Ташкент, Юнусабадский район, массив Минор, 90",
+        "business": "Барбершоп",
+        "__order": 2
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Uncle Chill (филиал в Юнусабаде)",
+      "phone": "+998 77 010-66-66",
+      "address": "Ташкент, ул. Матбуотчилар, 17 (ТРЦ Зарафшан)",
+      "category": "Барбершоп",
+      "raw": {
+        "name": "Uncle Chill (филиал в Юнусабаде)",
+        "phone-number": "+998 77 010-66-66",
+        "location": "Ташкент, ул. Матбуотчилар, 17 (ТРЦ Зарафшан)",
+        "business": "Барбершоп",
+        "__order": 3
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Топор Barbershop",
+      "phone": "+998 97 131-88-00",
+      "address": "Ташкент, Мирабадский район, ул. Мирабадская, 21",
+      "category": "Барбершоп",
+      "raw": {
+        "name": "Топор Barbershop",
+        "phone-number": "+998 97 131-88-00",
+        "location": "Ташкент, Мирабадский район, ул. Мирабадская, 21",
+        "business": "Барбершоп",
+        "__order": 4
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Kimmy Lab (Олой Бозори)",
+      "phone": "+998 91 018-55-88",
+      "address": "Ташкент, проезд Олой Бозори, 63",
+      "category": "Салон красоты / Маникюр",
+      "raw": {
+        "name": "Kimmy Lab (Олой Бозори)",
+        "phone-number": "+998 91 018-55-88",
+        "location": "Ташкент, проезд Олой Бозори, 63",
+        "business": "Салон красоты / Маникюр",
+        "__order": 5
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Kimmy Lab (Баходира)",
+      "phone": "+998 90 034-55-99",
+      "address": "Ташкент, ул. Баходира, 69/1",
+      "category": "Салон красоты / Маникюр",
+      "raw": {
+        "name": "Kimmy Lab (Баходира)",
+        "phone-number": "+998 90 034-55-99",
+        "location": "Ташкент, ул. Баходира, 69/1",
+        "business": "Салон красоты / Маникюр",
+        "__order": 6
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Shavi Coffee Roasters",
+      "phone": "+998 50 115-46-57",
+      "address": "Ташкент, ул. Буюк Турон, 41",
+      "category": "Кофейня (крафт, рейтинг 5.0)",
+      "raw": {
+        "name": "Shavi Coffee Roasters",
+        "phone-number": "+998 50 115-46-57",
+        "location": "Ташкент, ул. Буюк Турон, 41",
+        "business": "Кофейня (крафт, рейтинг 5.0)",
+        "__order": 7
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Socials Cafe",
+      "phone": "+998 99 008-88-11",
+      "address": "Ташкент, ул. Тараса Шевченко, 36А",
+      "category": "Кафе",
+      "raw": {
+        "name": "Socials Cafe",
+        "phone-number": "+998 99 008-88-11",
+        "location": "Ташкент, ул. Тараса Шевченко, 36А",
+        "business": "Кафе",
+        "__order": 8
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Benedict Cafe",
+      "phone": "+998 33 888-88-07",
+      "address": "Ташкент, ул. Нукусская, 31/2",
+      "category": "Кафе / Завтраки",
+      "raw": {
+        "name": "Benedict Cafe",
+        "phone-number": "+998 33 888-88-07",
+        "location": "Ташкент, ул. Нукусская, 31/2",
+        "business": "Кафе / Завтраки",
+        "__order": 9
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Trattoria A",
+      "phone": "+998 88 105-05-50",
+      "address": "Ташкент, проезд Ниёзбек Йули, 2",
+      "category": "Уютная траттория / Итальянская кухня",
+      "raw": {
+        "name": "Trattoria A",
+        "phone-number": "+998 88 105-05-50",
+        "location": "Ташкент, проезд Ниёзбек Йули, 2",
+        "business": "Уютная траттория / Итальянская кухня",
+        "__order": 10
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Punto Cafe",
+      "phone": "+998 71 200-11-22",
+      "address": "Ташкент, угол улиц Сайрам и Каландар",
+      "category": "Районное кафе / Выпечка",
+      "raw": {
+        "name": "Punto Cafe",
+        "phone-number": "+998 71 200-11-22",
+        "location": "Ташкент, угол улиц Сайрам и Каландар",
+        "business": "Районное кафе / Выпечка",
+        "__order": 11
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Gravity",
+      "phone": "+998 90 911-33-44",
+      "address": "Ташкент, Мирабадский район, 1-й проезд Мирабадская, 45",
+      "category": "Локальное кафе-бар",
+      "raw": {
+        "name": "Gravity",
+        "phone-number": "+998 90 911-33-44",
+        "location": "Ташкент, Мирабадский район, 1-й проезд Мирабадская, 45",
+        "business": "Локальное кафе-бар",
+        "__order": 12
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Joydaman",
+      "phone": "+998 93 500-88-99",
+      "address": "Ташкент, Яккасарайский район, 1-й проезд Краткий Мирабад, 11",
+      "category": "Европейское бистро",
+      "raw": {
+        "name": "Joydaman",
+        "phone-number": "+998 93 500-88-99",
+        "location": "Ташкент, Яккасарайский район, 1-й проезд Краткий Мирабад, 11",
+        "business": "Европейское бистро",
+        "__order": 13
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Furusato",
+      "phone": "+998 71 235-60-70",
+      "address": "Ташкент, 3-й тупик Ниёзбек Йули, 6А",
+      "category": "Японское кафе",
+      "raw": {
+        "name": "Furusato",
+        "phone-number": "+998 71 235-60-70",
+        "location": "Ташкент, 3-й тупик Ниёзбек Йули, 6А",
+        "business": "Японское кафе",
+        "__order": 14
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Greenwich Pub",
+      "phone": "+998 99 313-88-80",
+      "address": "Ташкент, ул. А. Фитрата, 159А",
+      "category": "Паб / Живая музыка",
+      "raw": {
+        "name": "Greenwich Pub",
+        "phone-number": "+998 99 313-88-80",
+        "location": "Ташкент, ул. А. Фитрата, 159А",
+        "business": "Паб / Живая музыка",
+        "__order": 15
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Basilic",
+      "phone": "+998 71 252-10-20",
+      "address": "Ташкент, Мирабадский район, пр. Амира Темура, 19",
+      "category": "Кафе / Средиземноморская кухня",
+      "raw": {
+        "name": "Basilic",
+        "phone-number": "+998 71 252-10-20",
+        "location": "Ташкент, Мирабадский район, пр. Амира Темура, 19",
+        "business": "Кафе / Средиземноморская кухня",
+        "__order": 16
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "The Choyxona",
+      "phone": "+998 99 844-88-88",
+      "address": "Ташкент, Юнусабадский район, проезд Богишамол, 131",
+      "category": "Авторская чайхана / Кафе",
+      "raw": {
+        "name": "The Choyxona",
+        "phone-number": "+998 99 844-88-88",
+        "location": "Ташкент, Юнусабадский район, проезд Богишамол, 131",
+        "business": "Авторская чайхана / Кафе",
+        "__order": 17
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Zira Cafe",
+      "phone": "+998 90 123-45-67",
+      "address": "Ташкент, район Tashkent City Park",
+      "category": "Кофейня / Кондитерская",
+      "raw": {
+        "name": "Zira Cafe",
+        "phone-number": "+998 90 123-45-67",
+        "location": "Ташкент, район Tashkent City Park",
+        "business": "Кофейня / Кондитерская",
+        "__order": 18
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "Aristokrat Euroasian",
+      "phone": "+998 88 712-70-00",
+      "address": "Ташкент, ул. Исмаилата, 21",
+      "category": "Евразийское кафе",
+      "raw": {
+        "name": "Aristokrat Euroasian",
+        "phone-number": "+998 88 712-70-00",
+        "location": "Ташкент, ул. Исмаилата, 21",
+        "business": "Евразийское кафе",
+        "__order": 19
+      }
+    },
+    {
+      "source": "Jahongir",
+      "name": "TomYumBar Tashkent",
+      "phone": "+998 94 787-77-77",
+      "address": "Ташкент, ул. Тараса Шевченко, 21А",
+      "category": "Азиатское кафе / Паназиатская кухня",
+      "raw": {
+        "name": "TomYumBar Tashkent",
+        "phone-number": "+998 94 787-77-77",
+        "location": "Ташкент, ул. Тараса Шевченко, 21А",
+        "business": "Азиатское кафе / Паназиатская кухня",
         "__order": 20
       }
     }

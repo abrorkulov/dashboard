@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import authRouter from './auth.js';
 import {
   createRecord,
   getBootstrap,
@@ -10,6 +11,9 @@ import {
 } from '../lib/dataset.js';
 
 const router = Router();
+
+// Autentifikatsiya (login)
+router.use('/auth', authRouter);
 
 router.get('/health', async (_req, res) => {
   res.json({

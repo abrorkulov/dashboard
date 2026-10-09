@@ -4,7 +4,7 @@ Bu loyihada endi **backend** bor: `Node.js + Express + Prisma + PostgreSQL`.
 Bitta xizmat ham **API** (`/api/...`), ham yigʻilgan **saytni** (`dist/`) beradi —
 shuning uchun Railwayʼda bitta servis yetarli.
 
-> Maʼlumotlar `prisma/seed-data.json` faylida (482 biznes, 11 aʼzo, 50 Instagram biznes)
+> Maʼlumotlar `prisma/seed-data.json` faylida (482 biznes, 11 aʼzo, 110 Instagram biznes)
 > va birinchi ishga tushishda avtomatik ravishda PostgreSQL bazasiga yoziladi.
 
 ---
@@ -67,7 +67,10 @@ git push -u origin main
    - **Value:** `${{Postgres.DATABASE_URL}}`
      (bu — Postgres servisiga havola; Railway haqiqiy ulanish satrini oʻzi qoʻyadi)
 3. Ixtiyoriy: `CORS_ORIGIN=*` (frontend boshqa domenda boʻlsa — oʻsha domen).
-4. **Deploy** tugmasini bosing (Railway oʻzgaruvchi oʻzgarganda avtomatik qayta deploy qiladi).
+4. Admin login uchun (berilmasa `admin` / `admin123` ishlatiladi — albatta oʻzgartiring):
+   - `ADMIN_LOGIN` = `admin`
+   - `ADMIN_PASSWORD` = kuchli parol (masalan `Biznes2026!`)
+5. **Deploy** tugmasini bosing (Railway oʻzgaruvchi oʻzgarganda avtomatik qayta deploy qiladi).
 
 ---
 
@@ -78,7 +81,7 @@ Deploy tugagach, **Deploy Logs** ni oching. Quyidagilar chiqishi kerak:
 ```
 [start] Sxema bazaga qo‘llanmoqda (prisma db push)...
 🚀  Your database is now in sync with your Prisma schema.
-[seed] Tayyor: 11 a'zo, 482 biznes yozuvi, 50 Instagram biznes
+[seed] Tayyor: 11 a'zo, 482 biznes yozuvi, 110 Instagram biznes
 [start] Server <PORT>-portda ishga tushdi
 ```
 
@@ -116,6 +119,7 @@ Chap paneldagi «Tizim holati» yozuvida **SERVER** koʻrinsa — sayt bazaga ul
 
 | Metod | Yoʻl | Tavsif |
 |-------|------|--------|
+| POST | `/api/auth/login` | Kirish (login/parol) |
 | GET | `/api/health` | Server va baza holati |
 | GET | `/api/bootstrap` | Hammasi birdan (frontend shuni chaqiradi) |
 | GET | `/api/stats` | Umumiy statistika |
@@ -150,6 +154,20 @@ npm run dev
 > **Baza boʻlmasa ham ishlaydi:** `DATABASE_URL` berilmasa, server
 > `prisma/seed-data.json` faylidan oʻqiydi (`/api/health` da `"database":"fallback"`).
 > Bu lokal sinov uchun qulay.
+
+---
+
+## 🔐 Kirish (autentifikatsiya)
+
+Hozircha **sodda** autentifikatsiya: `/api/auth/login` login/parolni
+`ADMIN_LOGIN` / `ADMIN_PASSWORD` bilan solishtiradi (standart: `admin` / `admin123`).
+
+- Frontend avval serverga murojaat qiladi; server javob bermasa — kod ichidagi
+  `admin` / `admin123` ishlaydi (backend ulanmaguncha).
+- ⚠️ Bu **toʻliq xavfsizlik emas**: sessiya/token tekshirilmaydi va boshqa API
+  endpointlar ochiq. Keyinchalik haqiqiy sessiya (JWT), parol hash'i va
+  endpointlarni himoyalashni qoʻshish kerak.
+- Sotuv bosqichlari (statuslar) hozircha brauzerda (localStorage) saqlanadi.
 
 ---
 

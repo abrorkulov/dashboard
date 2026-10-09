@@ -3,8 +3,7 @@ import { Check, Copy, ExternalLink, MapPin, Phone, UserRound } from 'lucide-reac
 import Modal from './Modal';
 import StatusSelect from './StatusSelect';
 import StatusBadge from './StatusBadge';
-import { useRecordStatus } from '../statuses/statusStore';
-import { getStatusDef } from '../statuses/statuses';
+import { useRecordStatus, useStatusDef } from '../statuses/statusStore';
 import type { BusinessRecord } from '../data/teamData';
 
 interface RecordDetailModalProps {
@@ -29,6 +28,7 @@ const RecordDetailModal = ({ record, onClose }: RecordDetailModalProps) => {
 
   // Early return dan oldin — barcha hooklar shartlabsiz chaqirilishi shart
   const recordStatus = useRecordStatus(record?.id ?? '');
+  const statusDef = useStatusDef(recordStatus);
 
   if (!record) return null;
 
@@ -36,8 +36,6 @@ const RecordDetailModal = ({ record, onClose }: RecordDetailModalProps) => {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${record.name} ${record.address} ${record.city}`
   )}`;
-
-  const statusDef = getStatusDef(recordStatus);
 
   return (
     <>

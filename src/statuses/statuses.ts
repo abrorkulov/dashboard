@@ -1,79 +1,173 @@
 /**
- * Biznes yozuvlari uchun sotuv bosqichlari (funnel) statuslari.
- * Statuslar data-fayllarda SAQLANMAYDI — ular faqat UI darajasida,
- * localStorage orqali (keyinroq backend/Supabase ulash oson bo'lishi uchun).
+ * Sotuv bosqichlari (status) ta'riflari va rang palitrasi.
+ *
+ * Statuslar endi DINAMIK — foydalanuvchi qo'shishi, nomini o'zgartirishi,
+ * rangini tanlashi va o'chirishi mumkin (statusStore.ts ga qarang).
+ * Saqlash joyi: localStorage. Keyinchalik backend'ga ko'chirish oson —
+ * faqat statusStorage.ts ni almashtirish kifoya.
  */
 
-export type StatusKey = 'yangi' | 'qongiroq' | 'suhbat' | 'kelishildi' | 'rad_etildi';
+/** Status identifikatori (endi erkin matn, slug ko'rinishida) */
+export type StatusKey = string;
 
-export interface StatusDef {
-  key: StatusKey;
-  /** To'liq nom (ro'yxatlar, selectlar uchun) */
+/** Rang varianti — Tailwind klasslari to'plami */
+export interface StatusColor {
+  key: string;
   label: string;
-  /** Qisqa nom (jadvallar, kartochkalar uchun) */
-  short: string;
-  /** Izoh / bosqich izohi */
-  hint: string;
-  /** Pill (chip) uchun Tailwind klasslari */
+  /** Pill (chip) uchun klasslar */
   badge: string;
-  /** Nuqta uchun Tailwind klasslari */
+  /** Nuqta uchun klasslar */
   dot: string;
-  /** Sarflanayotgan ustun (progress bar) uchun fon */
+  /** Progress bar uchun klasslar */
   track: string;
 }
 
-export const STATUS_FLOW: StatusDef[] = [
+export const STATUS_COLORS: StatusColor[] = [
+  {
+    key: 'slate',
+    label: 'Kulrang',
+    badge: 'bg-slate-100 text-slate-600 border-slate-200',
+    dot: 'bg-slate-400',
+    track: 'bg-slate-400',
+  },
+  {
+    key: 'blue',
+    label: 'Koʻk',
+    badge: 'bg-blue-50 text-blue-700 border-blue-100',
+    dot: 'bg-blue-500',
+    track: 'bg-blue-500',
+  },
+  {
+    key: 'amber',
+    label: 'Sariq',
+    badge: 'bg-amber-50 text-amber-700 border-amber-100',
+    dot: 'bg-amber-500',
+    track: 'bg-amber-500',
+  },
+  {
+    key: 'emerald',
+    label: 'Yashil',
+    badge: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+    dot: 'bg-emerald-500',
+    track: 'bg-emerald-500',
+  },
+  {
+    key: 'rose',
+    label: 'Qizil',
+    badge: 'bg-rose-50 text-rose-700 border-rose-100',
+    dot: 'bg-rose-500',
+    track: 'bg-rose-500',
+  },
+  {
+    key: 'violet',
+    label: 'Binafsha',
+    badge: 'bg-violet-50 text-violet-700 border-violet-100',
+    dot: 'bg-violet-500',
+    track: 'bg-violet-500',
+  },
+  {
+    key: 'cyan',
+    label: 'Moviy',
+    badge: 'bg-cyan-50 text-cyan-700 border-cyan-100',
+    dot: 'bg-cyan-500',
+    track: 'bg-cyan-500',
+  },
+  {
+    key: 'orange',
+    label: 'Olovrang',
+    badge: 'bg-orange-50 text-orange-700 border-orange-100',
+    dot: 'bg-orange-500',
+    track: 'bg-orange-500',
+  },
+];
+
+const COLOR_MAP = new Map<string, StatusColor>(STATUS_COLORS.map((c) => [c.key, c]));
+
+export function getStatusColor(key: string | undefined): StatusColor {
+  return COLOR_MAP.get(key ?? '') ?? STATUS_COLORS[0];
+}
+
+/** Status ta'rifi (saqlanadigan ma'lumot) */
+export interface StatusDef {
+  key: StatusKey;
+  label: string;
+  short: string;
+  hint: string;
+  /** STATUS_COLORS dagi rang kaliti */
+  color: string;
+}
+
+/** Rang klasslari qo'shilgan (hisoblab chiqarilgan) status */
+export interface ResolvedStatusDef extends StatusDef {
+  badge: string;
+  dot: string;
+  track: string;
+}
+
+export function resolveStatus(def: StatusDef): ResolvedStatusDef {
+  const color = getStatusColor(def.color);
+  return { ...def, badge: color.badge, dot: color.dot, track: color.track };
+}
+
+/** Standart (boshlangʻich) sotuv bosqichlari */
+export const DEFAULT_STATUSES: StatusDef[] = [
   {
     key: 'yangi',
     label: 'Yangi',
     short: 'Yangi',
     hint: 'Hali aloqa qilinmagan',
-    badge: 'bg-slate-100 text-slate-600 border-slate-200',
-    dot: 'bg-slate-400',
-    track: 'bg-slate-400',
+    color: 'slate',
   },
   {
     key: 'qongiroq',
     label: 'Qoʻngʻiroq qilindi',
     short: 'Qoʻngʻiroq',
     hint: 'Biznesga qoʻngʻiroq qilindi',
-    badge: 'bg-blue-50 text-blue-700 border-blue-100',
-    dot: 'bg-blue-500',
-    track: 'bg-blue-500',
+    color: 'blue',
   },
   {
     key: 'suhbat',
     label: 'Suhbatlashildi',
     short: 'Suhbat',
     hint: 'Muzokara boʻlib oʻtdi',
-    badge: 'bg-amber-50 text-amber-700 border-amber-100',
-    dot: 'bg-amber-500',
-    track: 'bg-amber-500',
+    color: 'amber',
   },
   {
     key: 'kelishildi',
     label: 'Kelishildi',
     short: 'Kelishildi',
     hint: 'Shartnoma boʻyicha kelishildi',
-    badge: 'bg-emerald-50 text-emerald-700 border-emerald-100',
-    dot: 'bg-emerald-500',
-    track: 'bg-emerald-500',
+    color: 'emerald',
   },
   {
     key: 'rad_etildi',
     label: 'Rad etildi',
     short: 'Rad etildi',
     hint: 'Rad etildi yoki javob bermadi',
-    badge: 'bg-rose-50 text-rose-700 border-rose-100',
-    dot: 'bg-rose-500',
-    track: 'bg-rose-500',
+    color: 'rose',
   },
 ];
 
 export const DEFAULT_STATUS: StatusKey = 'yangi';
 
-const STATUS_MAP = new Map<StatusKey, StatusDef>(STATUS_FLOW.map((s) => [s.key, s]));
+/** Yorliqdan yagona kalit yasaydi (masalan "Yangi bosqich" -> "yangi_bosqich") */
+export function makeStatusKey(label: string, existing: string[]): string {
+  const base =
+    String(label || '')
+      .toLowerCase()
+      .replace(/[‘’ʻ'`]/g, '')
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '')
+      .slice(0, 32) || 'status';
 
-export function getStatusDef(key: StatusKey | undefined | null): StatusDef {
-  return STATUS_MAP.get(key ?? DEFAULT_STATUS) ?? STATUS_MAP.get(DEFAULT_STATUS)!;
+  if (!existing.includes(base)) return base;
+  let n = 2;
+  while (existing.includes(`${base}_${n}`)) n += 1;
+  return `${base}_${n}`;
+}
+
+/** Toast / xabar uchun qisqa nom */
+export function shortLabel(label: string): string {
+  const trimmed = String(label || '').trim();
+  return trimmed.length > 14 ? `${trimmed.slice(0, 13)}…` : trimmed;
 }

@@ -1,5 +1,10 @@
-import { getStatusDef, STATUS_FLOW, type StatusKey } from '../statuses/statuses';
-import { useRecordStatus, useSetRecordStatus } from '../statuses/statusStore';
+import type { StatusKey } from '../statuses/statuses';
+import {
+  useRecordStatus,
+  useSetRecordStatus,
+  useStatusDef,
+  useStatusFlow,
+} from '../statuses/statusStore';
 
 interface StatusSelectProps {
   recordId: string;
@@ -10,25 +15,31 @@ interface StatusSelectProps {
 /**
  * Yozuv statusini o'zgartirish uchun select.
  * Tanlangan holat darhol localStorage'ga yoziladi.
+ * Statuslar ro'yxati dinamik — Statuslarni boshqarish oynasidan o'zgaradi.
  */
 const StatusSelect = ({ recordId, className = '', ...aria }: StatusSelectProps) => {
+  const flow = useStatusFlow();
   const status = useRecordStatus(recordId);
   const setStatus = useSetRecordStatus();
-  const def = getStatusDef(status);
+  const def = useStatusDef(status);
 
   return (
     <div className={`relative inline-flex ${className}`}>
       <span
         aria-hidden
-        className={`pointer-events-none absolute left-3 top-1/2 size-2 -translate-y-1/2 rounded-full ${def.dot}`}
+        className={`pointer-events-none absolute left-3 top-1/2 size-2 -translate-y-1/2 rounded-full ${
+          def?.dot ?? 'bg-slate-400'
+        }`}
       />
       <select
         aria-label={aria['aria-label'] ?? 'Statusni tanlash'}
         value={status}
         onChange={(e) => setStatus(recordId, e.target.value as StatusKey)}
-        className={`w-full cursor-pointer appearance-none rounded-xl border py-2 pr-8 pl-8 text-xs font-semibold focus:outline-2 focus:outline-offset-2 focus:outline-brand-500 ${def.badge}`}
+        className={`w-full cursor-pointer appearance-none rounded-xl border py-2 pr-8 pl-8 text-xs font-semibold focus:outline-2 focus:outline-offset-2 focus:outline-brand-500 ${
+          def?.badge ?? 'bg-slate-100 text-slate-600 border-slate-200'
+        }`}
       >
-        {STATUS_FLOW.map((s) => (
+        {flow.map((s) => (
           <option key={s.key} value={s.key} className="bg-white text-ink">
             {s.label}
           </option>
@@ -39,7 +50,14 @@ const StatusSelect = ({ recordId, className = '', ...aria }: StatusSelectProps) 
         viewBox="0 0 12 12"
         className="pointer-events-none absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 opacity-60"
       >
-        <path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M3 4.5 6 7.5 9 4.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     </div>
   );

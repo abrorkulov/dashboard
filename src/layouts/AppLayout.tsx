@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
@@ -10,6 +10,16 @@ import Sidebar from '../components/Sidebar';
 const AppLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+
+  // Esc — mobil menyuni ham yopadi (modallar kabi)
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [mobileOpen]);
 
   // Har bir sahifaga o'tganda mobil panelni yopamiz (render davomida yangilash)
   const [lastPath, setLastPath] = useState(location.pathname);

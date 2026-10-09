@@ -32,6 +32,13 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+export interface LoginResponse {
+  ok: boolean;
+  token?: string;
+  user?: { username: string };
+  error?: string;
+}
+
 export const api = {
   base: API_BASE,
   health: (signal?: AbortSignal) =>
@@ -39,4 +46,17 @@ export const api = {
   bootstrap: (signal?: AbortSignal) => request<BootstrapPayload>('/bootstrap', { signal }),
   createRecord: (record: Partial<BusinessRecord>) =>
     request<BusinessRecord>('/records', { method: 'POST', body: JSON.stringify(record) }),
+  /** Server orqali kirish (401 bo'lsa xatoni qaytaradi, tashlamaydi) */
+  login: async (username: string, password: string): Promise<LoginResponse> => {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = (await res.json().catch(() => ({}))) as LoginResponse;
+    if (!res.ok) {
+      return { ok: false, error: data.error || `Xato (${res.status})` };
+    }
+    return { ok: true, token: data.token, user: data.user };
+  },
 };

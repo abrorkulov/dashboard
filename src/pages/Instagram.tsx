@@ -16,8 +16,11 @@ import { useAppData } from '../data/dataContext';
 import type { InstagramBusiness } from '../data/teamData';
 
 const SOURCE_LABELS: Record<string, string> = {
+  Abdulloh: 'Abdulloh',
   Ibrohim: 'Ibrohim',
   Ilyosxoja: 'Ilyosxoja',
+  Jahongir: 'Jahongir',
+  Mohi: 'Mohi',
   Zohirshoh: 'Zohirshoh',
 };
 

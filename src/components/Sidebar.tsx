@@ -6,9 +6,11 @@ import {
   ChartColumn,
   Database,
   LayoutDashboard,
+  LogOut,
   Users,
 } from 'lucide-react';
 import { useAppData } from '../data/dataContext';
+import { useAuth } from '../auth/authContext';
 import type { SummaryStats } from '../data/teamData';
 
 function buildNavItems(stats: SummaryStats) {
@@ -28,6 +30,7 @@ interface SidebarProps {
 const Sidebar = ({ onNavigate }: SidebarProps) => {
   const location = useLocation();
   const { stats, source, loading } = useAppData();
+  const { user, logout } = useAuth();
   const navItems = buildNavItems(stats);
 
   return (
@@ -108,15 +111,26 @@ const Sidebar = ({ onNavigate }: SidebarProps) => {
       {/* Profil */}
       <div className="flex items-center gap-3 border-t border-line px-5 py-4">
         <div className="flex size-9 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700">
-          B
+          {(user?.username ?? 'B').charAt(0).toUpperCase()}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-semibold text-ink">Boshqaruvchi</div>
+          <div className="truncate text-sm font-semibold text-ink">
+            {user?.username ?? 'Mehmon'}
+          </div>
           <div className="flex items-center gap-1 text-xs text-ink-muted">
             <Activity size={12} className="text-success-500" />
             Administrator
           </div>
         </div>
+        <button
+          type="button"
+          onClick={logout}
+          className="btn-ghost !p-2 !text-ink-muted hover:!bg-rose-50 hover:!text-rose-600"
+          title="Chiqish"
+          aria-label="Chiqish"
+        >
+          <LogOut size={16} />
+        </button>
       </div>
     </div>
   );

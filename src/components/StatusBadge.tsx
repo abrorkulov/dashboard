@@ -1,4 +1,5 @@
-import { getStatusDef, type StatusKey } from '../statuses/statuses';
+import type { StatusKey } from '../statuses/statuses';
+import { useStatusDef } from '../statuses/statusStore';
 
 interface StatusBadgeProps {
   status: StatusKey;
@@ -8,7 +9,9 @@ interface StatusBadgeProps {
 
 /** Statusning rangli pill ko'rinishi */
 const StatusBadge = ({ status, size = 'md', withDot = true }: StatusBadgeProps) => {
-  const def = getStatusDef(status);
+  const def = useStatusDef(status);
+
+  if (!def) return null;
 
   return (
     <span

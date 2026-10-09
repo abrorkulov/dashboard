@@ -1,8 +1,8 @@
 /**
  * Qo'lda ishga tushiriladigan smoke-test:
  *   node scripts/smoke-test.mjs
- * Xususiyatlarni tekshiradi: sahifalar ochiladi, xato yo'q,
- * status o'zgaradi va reload'dan keyin saqlanib qoladi.
+ * Xususiyatlarni tekshiradi: login, sahifalar ochiladi, xato yo'q,
+ * status o'zgaradi va reload'dan keyin saqlanib qoladi, Esc modalni yopadi.
  */
 import { chromium } from 'playwright-core';
 import { mkdirSync } from 'node:fs';
@@ -27,6 +27,14 @@ page.on('pageerror', (err) => pageErrors.push(String(err)));
 page.on('console', (msg) => {
   if (msg.type() === 'error') pageErrors.push(msg.text());
 });
+
+// 0. Tizimga kirish (admin / admin123)
+await page.goto(BASE + '/login', { waitUntil: 'networkidle' });
+await page.fill('#login', 'admin');
+await page.fill('#parol', 'admin123');
+await page.click('button[type="submit"]');
+await page.waitForURL((url) => !url.pathname.startsWith('/login'), { timeout: 15000 });
+check('Login ishlaydi (admin/admin123)', !page.url().includes('/login'), page.url());
 
 // 1. Barcha sahifalar ochiladi va render bo'ladi
 const routes = [
@@ -71,6 +79,12 @@ await page.locator('.card').filter({ hasText: 'Batafsil →' }).first().click();
 await page.waitForTimeout(400);
 const dialog = await page.locator('[role="dialog"]').count();
 check('Tafsilotlar modali ochiladi', dialog === 1);
+
+// 5b. Esc tugmasi modalni yopadi
+await page.keyboard.press('Escape');
+await page.waitForTimeout(300);
+const dialogAfterEsc = await page.locator('[role="dialog"]').count();
+check('Esc modalni yopadi', dialogAfterEsc === 0, `dialogs=${dialogAfterEsc}`);
 
 // 6. Konsolda xato yo'q
 check('Konsolda xato yo\'q', pageErrors.length === 0, pageErrors.slice(0, 3).join(' | '));

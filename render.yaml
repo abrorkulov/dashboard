@@ -1,0 +1,30 @@
+# Render Blueprint — необязательный, для деплоя на Render одним файлом.
+# В Render: New → Blueprint → выбери этот репозиторий.
+#
+# ВАЖНО: бесплатная БД Render удаляется через 30 дней. Для постоянной работы
+# задай DATABASE_URL из Neon/Tiger Cloud вместо render.yaml-базы (см. DEPLOY.md).
+services:
+  - type: web
+    name: biznes-baza
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    envVars:
+      - key: CORS_ORIGIN
+        value: '*'
+      # Admin login. ADMIN_PASSWORD berilmasa standart "admin123" ishlaydi —
+      # ishlab chiqarishda alohida parol qo'shing (yoki generateValue: true).
+      - key: ADMIN_LOGIN
+        value: admin
+      - key: DATABASE_URL
+        fromDatabase:
+          name: biznes-baza-db
+          property: connectionString
+
+databases:
+  - name: biznes-baza-db
+    plan: free
+    databaseName: biznes
+    user: biznes

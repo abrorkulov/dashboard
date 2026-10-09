@@ -7,6 +7,7 @@ import {
   MapPin,
   Phone,
   Plus,
+  Settings2,
   TrendingUp,
   Users,
 } from 'lucide-react';
@@ -16,9 +17,9 @@ import AddRecordModal from '../components/AddRecordModal';
 import Modal from '../components/Modal';
 import StatusBadge from '../components/StatusBadge';
 import StatusSelect from '../components/StatusSelect';
+import StatusManagerModal from '../components/StatusManagerModal';
 import MemberAvatar from '../components/MemberAvatar';
-import { STATUS_FLOW } from '../statuses/statuses';
-import { countStatuses, useStatusMap } from '../statuses/statusStore';
+import { countStatuses, useStatusFlow, useStatusMap } from '../statuses/statusStore';
 import type { BusinessRecord, TeamMember } from '../data/teamData';
 import { exportToCSV } from '../data/teamData';
 import { useAppData } from '../data/dataContext';
@@ -29,10 +30,17 @@ const Home = () => {
   const [selectedRecord, setSelectedRecord] = useState<BusinessRecord | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isStatusManagerOpen, setIsStatusManagerOpen] = useState(false);
   const [cityFilter, setCityFilter] = useState<string>('all');
 
   const statusMap = useStatusMap();
-  const funnel = countStatuses(records.map((r) => r.id), statusMap);
+  const statusFlow = useStatusFlow();
+  const defaultStatusKey = statusFlow[0]?.key ?? 'yangi';
+  const funnel = countStatuses(
+    records.map((r) => r.id),
+    statusMap,
+    statusFlow.map((s) => s.key)
+  );
 
   const stats = [
     {
@@ -113,14 +121,24 @@ const Home = () => {
               Har bir biznesning hozirgi statusi — batafsil oynadan oʻzgartirsa boʻladi
             </p>
           </div>
-          <span className="rounded-full bg-canvas px-3 py-1 text-xs font-semibold text-ink-soft">
-            Jami {records.length} ta
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="rounded-full bg-canvas px-3 py-1 text-xs font-semibold text-ink-soft">
+              Jami {records.length} ta
+            </span>
+            <button
+              type="button"
+              onClick={() => setIsStatusManagerOpen(true)}
+              className="btn-secondary !py-1.5 !text-xs"
+            >
+              <Settings2 size={14} />
+              Statuslarni boshqarish
+            </button>
+          </div>
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {STATUS_FLOW.map((s) => {
-            const count = funnel[s.key];
+          {statusFlow.map((s) => {
+            const count = funnel[s.key] ?? 0;
             const percent = Math.round((count / funnelTotal) * 100);
             return (
               <div key={s.key} className="rounded-xl border border-line bg-canvas p-3.5">
@@ -394,7 +412,7 @@ const Home = () => {
               >
                 <div className="flex items-start justify-between gap-2">
                   <span className="text-sm font-semibold text-ink">{rec.name}</span>
-                  <StatusBadge status={statusMap[rec.id] ?? 'yangi'} size="sm" />
+                  <StatusBadge status={statusMap[rec.id] ?? defaultStatusKey} size="sm" />
                 </div>
                 <span className="mt-1 block text-xs font-medium text-brand-600">
                   {rec.category}
@@ -424,6 +442,11 @@ const Home = () => {
         onAdd={addRecord}
       />
 
+      {/* Statuslarni boshqarish */}
+      <StatusManagerModal
+        isOpen={isStatusManagerOpen}
+        onClose={() => setIsStatusManagerOpen(false)}
+      />
     </div>
   );
 };

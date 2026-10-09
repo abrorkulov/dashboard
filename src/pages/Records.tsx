@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
-import { LayoutGrid, List, MapPin, Phone, Store, X } from 'lucide-react';
+import { LayoutGrid, List, MapPin, Phone, Settings2, Store, X } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import RecordDetailModal from '../components/RecordDetailModal';
 import AddRecordModal from '../components/AddRecordModal';
+import StatusManagerModal from '../components/StatusManagerModal';
 import StatusSelect from '../components/StatusSelect';
-import { STATUS_FLOW } from '../statuses/statuses';
-import { useStatusMap } from '../statuses/statusStore';
+import { useStatusFlow, useStatusMap } from '../statuses/statusStore';
 import type { BusinessRecord } from '../data/teamData';
 import { useAppData } from '../data/dataContext';
 
@@ -19,8 +19,11 @@ const Records = () => {
   const [page, setPage] = useState(1);
   const [selectedRecord, setSelectedRecord] = useState<BusinessRecord | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isStatusManagerOpen, setIsStatusManagerOpen] = useState(false);
 
   const statusMap = useStatusMap();
+  const statusFlow = useStatusFlow();
+  const defaultStatusKey = statusFlow[0]?.key ?? 'yangi';
   const pageSize = 24;
 
   const filteredRecords = useMemo(() => {
@@ -36,11 +39,11 @@ const Records = () => {
 
       const matchesCity = selectedCity === 'all' || r.city.toLowerCase() === selectedCity.toLowerCase();
       const matchesMember = selectedMember === 'all' || r.member.toLowerCase() === selectedMember.toLowerCase();
-      const matchesStatus = selectedStatus === 'all' || (statusMap[r.id] ?? 'yangi') === selectedStatus;
+      const matchesStatus = selectedStatus === 'all' || (statusMap[r.id] ?? defaultStatusKey) === selectedStatus;
 
       return matchesSearch && matchesCity && matchesMember && matchesStatus;
     });
-  }, [records, searchQuery, selectedCity, selectedMember, selectedStatus, statusMap]);
+  }, [records, searchQuery, selectedCity, selectedMember, selectedStatus, statusMap, defaultStatusKey]);
 
   const totalPages = Math.ceil(filteredRecords.length / pageSize) || 1;
   const paginatedRecords = useMemo(() => {
@@ -118,7 +121,7 @@ const Records = () => {
             aria-label="Status boʻyicha filtrlash"
           >
             <option value="all">Barcha statuslar</option>
-            {STATUS_FLOW.map((s) => (
+            {statusFlow.map((s) => (
               <option key={s.key} value={s.key}>
                 {s.label}
               </option>
@@ -141,6 +144,15 @@ const Records = () => {
           <span className="text-sm text-ink-soft">
             Topildi: <strong className="text-ink">{filteredRecords.length}</strong> ta
           </span>
+
+          <button
+            type="button"
+            onClick={() => setIsStatusManagerOpen(true)}
+            className="btn-secondary !py-2 !text-xs"
+          >
+            <Settings2 size={14} />
+            Statuslar
+          </button>
 
           <div className="flex overflow-hidden rounded-xl border border-line">
             <button
@@ -341,6 +353,12 @@ const Records = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onAdd={addRecord}
+      />
+
+      {/* Statuslarni boshqarish */}
+      <StatusManagerModal
+        isOpen={isStatusManagerOpen}
+        onClose={() => setIsStatusManagerOpen(false)}
       />
     </div>
   );

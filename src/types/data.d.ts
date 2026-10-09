@@ -67,3 +67,13 @@ declare module '*/Zohirshohinst' {
   const data: any[];
   export default data;
 }
+
+declare module '*/Abdullohinst' {
+  const data: any[];
+  export default data;
+}
+
+declare module '*/MohiInst' {
+  const data: any[];
+  export default data;
+}

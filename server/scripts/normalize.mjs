@@ -21,6 +21,9 @@ import zohirshohData from '../../src/data/Zohirshoh.js';
 import ibrohimInst from '../../src/instdata/IbrohimInst.js';
 import ilyosxojaInst from '../../src/instdata/Ilyosxojainst.js';
 import zohirshohInst from '../../src/instdata/Zohirshohinst.js';
+import abdullohInst from '../../src/instdata/Abdullohinst.js';
+import mohiInst from '../../src/instdata/MohiInst.js';
+import jahongirInst from '../../src/instdata/Jahongirinst.js';
 
 function detectCity(text, fallback) {
   const lower = (text || '').toLowerCase();
@@ -375,6 +378,25 @@ function looksLikePhone(value) {
   return /\+?\d[\d\s()-]{6,}/.test(value) && !/telegram|instagram|профиль/i.test(value);
 }
 
+/** 9 xonali Oʻzbekiston raqamini chiroyli koʻrinishga keltiradi */
+function formatUzPhone(value) {
+  if (!value) return undefined;
+  const raw = String(value).trim();
+  const digits = raw.replace(/\D/g, '');
+  if (!raw.includes('+') && digits.length === 9 && digits.startsWith('9')) {
+    return `+998 ${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 7)} ${digits.slice(7)}`;
+  }
+  return raw || undefined;
+}
+
+function phoneValidationLabel(value) {
+  if (!value) return undefined;
+  const v = String(value);
+  if (/^user_provided/i.test(v)) return 'Raqam foydalanuvchi kiritgan';
+  if (/^format_checked/i.test(v)) return 'Raqam formati tekshirilgan';
+  return v;
+}
+
 function buildInstagram() {
   const out = [];
 
@@ -419,6 +441,54 @@ function buildInstagram() {
       address: (item.location || '').trim() || undefined,
       category: (item.category || '').trim() || undefined,
       contact: rawPhone || undefined,
+      description: undefined,
+      owner: undefined,
+      raw: { ...item, __order: idx + 1 },
+    });
+  });
+
+  (abdullohInst || []).forEach((item, idx) => {
+    const website = (item.website || '').trim();
+    out.push({
+      source: 'Abdulloh',
+      name: (item.business || '').trim() || 'Instagram biznes',
+      username: normalizeUsername(item.username),
+      phone: formatUzPhone(item.phone),
+      address: (item.location || '').trim() || undefined,
+      category: 'Instagram biznes',
+      contact: undefined,
+      description: website && !/^yo['’ʻ]?q$/i.test(website) ? `Sayt: ${website}` : undefined,
+      owner: undefined,
+      raw: { ...item, __order: idx + 1 },
+    });
+  });
+
+  (mohiInst || []).forEach((item, idx) => {
+    const source = (item.source || '').trim();
+    const validation = phoneValidationLabel(item.phone_validation);
+    out.push({
+      source: 'Mohi',
+      name: (item.name || '').trim() || 'Instagram biznes',
+      username: normalizeUsername(item.instagram || item.name),
+      phone: formatUzPhone(item.phone),
+      address: (item.location || '').trim() || undefined,
+      category: 'Instagram biznes',
+      contact: undefined,
+      description: [validation, /^https?:/i.test(source) ? source : ''].filter(Boolean).join(' • ') || undefined,
+      owner: undefined,
+      raw: { ...item, __order: idx + 1 },
+    });
+  });
+
+  (jahongirInst || []).forEach((item, idx) => {
+    out.push({
+      source: 'Jahongir',
+      name: (item.name || '').trim() || 'Instagram biznes',
+      username: undefined,
+      phone: formatUzPhone(item['phone-number']),
+      address: (item.location || '').trim() || undefined,
+      category: (item.business || '').trim() || 'Instagram biznes',
+      contact: undefined,
       description: undefined,
       owner: undefined,
       raw: { ...item, __order: idx + 1 },

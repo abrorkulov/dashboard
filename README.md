@@ -29,6 +29,11 @@ npm start          # API + sayt (http://localhost:4000)
 ```
 
 Batafsil (Railway'ga joylashtirish, seed, endpointlar) — [RAILWAY.md](RAILWAY.md).
+Railway limiti tugasa yoki boshqa hosting kerak bo'lsa — [DEPLOY.md](DEPLOY.md)
+(Northflank, Render, Neon, Tiger Cloud va boshqalar).
+
+> Kirish sahifasi: `/login` — vaqtinchalik hisob `admin` / `admin123`
+> (backend ishga tushgach `ADMIN_LOGIN` / `ADMIN_PASSWORD` orqali tekshiriladi).
 
 ## Buyruqlar
 

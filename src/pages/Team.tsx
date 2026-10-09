@@ -5,7 +5,7 @@ import Modal from '../components/Modal';
 import RecordDetailModal from '../components/RecordDetailModal';
 import StatusBadge from '../components/StatusBadge';
 import MemberAvatar from '../components/MemberAvatar';
-import { useStatusMap } from '../statuses/statusStore';
+import { useStatusFlow, useStatusMap } from '../statuses/statusStore';
 import type { TeamMember, BusinessRecord } from '../data/teamData';
 import { exportToCSV } from '../data/teamData';
 import { useAppData } from '../data/dataContext';
@@ -18,6 +18,8 @@ const Team = () => {
   const [detailRecord, setDetailRecord] = useState<BusinessRecord | null>(null);
 
   const statusMap = useStatusMap();
+  const statusFlow = useStatusFlow();
+  const defaultStatusKey = statusFlow[0]?.key ?? 'yangi';
   const { members } = useAppData();
 
   const openMember = (member: TeamMember) => {
@@ -176,7 +178,7 @@ const Team = () => {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-sm font-semibold text-ink">{item.name}</span>
-                    <StatusBadge status={statusMap[item.id] ?? 'yangi'} size="sm" />
+                    <StatusBadge status={statusMap[item.id] ?? defaultStatusKey} size="sm" />
                   </div>
                   <span className="mt-1 block text-xs font-medium text-brand-600">
                     {item.category}
