@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Team from './pages/Team';
 import Records from './pages/Records';
 import Analytics from './pages/Analytics';
+import Instagram from './pages/Instagram';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/records" element={<Records />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/instagram" element={<Instagram />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

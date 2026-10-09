@@ -25,3 +25,8 @@ dist-ssr
 
 # Test screenshots (scripts/smoke-test.mjs)
 screenshots/
+
+# Environment variables (mahsus sirlar repoga tushmasin)
+.env
+.env.*
+!.env.example

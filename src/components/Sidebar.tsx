@@ -2,18 +2,24 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Activity,
   Building2,
+  Camera,
   ChartColumn,
+  Database,
   LayoutDashboard,
   Users,
 } from 'lucide-react';
-import { summaryStats } from '../data/teamData';
+import { useAppData } from '../data/dataContext';
+import type { SummaryStats } from '../data/teamData';
 
-const navItems = [
-  { path: '/', label: 'Asosiy panel', icon: LayoutDashboard },
-  { path: '/team', label: 'Jamoa aʼzolari', icon: Users, badge: String(summaryStats.totalMembers) },
-  { path: '/records', label: 'Barcha bizneslar', icon: Building2, badge: String(summaryStats.totalRecords) },
-  { path: '/analytics', label: 'Statistika va tahlil', icon: ChartColumn },
-];
+function buildNavItems(stats: SummaryStats) {
+  return [
+    { path: '/', label: 'Asosiy panel', icon: LayoutDashboard },
+    { path: '/team', label: 'Jamoa aʼzolari', icon: Users, badge: String(stats.totalMembers) },
+    { path: '/records', label: 'Barcha bizneslar', icon: Building2, badge: String(stats.totalRecords) },
+    { path: '/instagram', label: 'Instagram Bissnesezz', icon: Camera, badge: String(stats.instagramCount) },
+    { path: '/analytics', label: 'Statistika va tahlil', icon: ChartColumn },
+  ];
+}
 
 interface SidebarProps {
   onNavigate?: () => void;
@@ -21,6 +27,8 @@ interface SidebarProps {
 
 const Sidebar = ({ onNavigate }: SidebarProps) => {
   const location = useLocation();
+  const { stats, source, loading } = useAppData();
+  const navItems = buildNavItems(stats);
 
   return (
     <div className="flex h-full flex-col">
@@ -73,17 +81,27 @@ const Sidebar = ({ onNavigate }: SidebarProps) => {
         <div className="mt-6 rounded-2xl border border-line bg-canvas p-4">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-ink-soft">Tizim holati</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-success-700">
-              <span className="size-1.5 rounded-full bg-success-500" />
-              ONLAYN
+            <span
+              className={`inline-flex items-center gap-1.5 text-[11px] font-semibold ${
+                source === 'api' ? 'text-success-700' : 'text-warning-700'
+              }`}
+            >
+              <span
+                className={`size-1.5 rounded-full ${source === 'api' ? 'bg-success-500' : 'bg-warning-500'}`}
+              />
+              {loading ? 'YUKLANMOQDA' : source === 'api' ? 'SERVER' : 'LOKAL'}
             </span>
           </div>
           <p className="mt-2 text-sm font-semibold text-ink">
-            {summaryStats.totalRecords} ta biznes bazada
+            {stats.totalRecords} ta biznes bazada
           </p>
           <p className="mt-0.5 text-xs text-ink-muted">
-            {summaryStats.citiesCount} ta shahar boʻyicha maʼlumot
+            {stats.citiesCount} ta shahar • {stats.instagramCount} ta Instagram biznes
           </p>
+          <div className="mt-3 flex items-center gap-1.5 border-t border-line pt-3 text-[11px] text-ink-muted">
+            <Database size={12} />
+            {source === 'api' ? 'Backend (Express + Prisma)' : 'Lokal zaxira maʼlumotlar'}
+          </div>
         </div>
       </nav>
 

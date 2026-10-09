@@ -1,0 +1,69 @@
+// Biznes Baza — ma'lumotlar bazasi sxemasi (PostgreSQL / Railway)
+// Bu sxema backend tomonidan ishlatiladi va Railway'dagi PostgreSQL bazasiga ulanadi.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Jamoa a'zosi (ma'lumot yig'uvchi)
+model TeamMember {
+  id        String   @id
+  name      String
+  role      String
+  initials  String
+  color     String
+  city      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  records BusinessRecord[]
+}
+
+/// Bitta biznes yozuvi
+model BusinessRecord {
+  id        String  @id
+  memberId  String?
+  /// Kirituvchi a'zo nomi (frontend uchun qulay ko'rinish)
+  member    String
+  name      String
+  category  String
+  phone     String  @default("")
+  address   String  @default("")
+  city      String
+  link      String?
+  note      String?
+  status    String?
+  priority  String?
+  raw       Json?
+  createdAt DateTime @default(now())
+
+  memberRef TeamMember? @relation(fields: [memberId], references: [id], onDelete: SetNull)
+
+  @@index([memberId])
+  @@index([city])
+  @@index([category])
+}
+
+/// Instagram orqali topilgan bizneslar (src/instdata ma'lumotlari)
+model InstagramBusiness {
+  id          Int      @id @default(autoincrement())
+  /// Ma'lumotni kim yig'gan: Ibrohim / Ilyosxoja / Zohirshoh
+  source      String
+  name        String
+  username    String?
+  phone       String?
+  address     String?
+  category    String?
+  contact     String?
+  description String?
+  owner       String?
+  raw         Json?
+  createdAt   DateTime @default(now())
+
+  @@index([source])
+}

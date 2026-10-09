@@ -2,40 +2,41 @@ import { BadgeCheck, MapPin, PhoneCall, Users } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import { STATUS_FLOW } from '../statuses/statuses';
 import { countStatuses, useStatusMap } from '../statuses/statusStore';
-import { allBusinessRecords, allTeamMembers, summaryStats } from '../data/teamData';
+import { useAppData } from '../data/dataContext';
 
 const Analytics = () => {
   const statusMap = useStatusMap();
+  const { records, members, stats } = useAppData();
 
   // Shaharlar bo'yicha taqsimot
   const cityCounts: Record<string, number> = {};
-  allBusinessRecords.forEach((r) => {
+  records.forEach((r) => {
     cityCounts[r.city] = (cityCounts[r.city] || 0) + 1;
   });
   const cityList = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]);
 
   // Kategoriyalar bo'yicha taqsimot (top 6)
   const categoryCounts: Record<string, number> = {};
-  allBusinessRecords.forEach((r) => {
+  records.forEach((r) => {
     categoryCounts[r.category] = (categoryCounts[r.category] || 0) + 1;
   });
   const topCategories = Object.entries(categoryCounts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
 
-  const phoneValidCount = allBusinessRecords.filter((r) => r.phone && r.phone.length > 5).length;
+  const phoneValidCount = records.filter((r) => r.phone && r.phone.length > 5).length;
 
   // Sotuv bosqichlari
   const funnel = countStatuses(
-    allBusinessRecords.map((r) => r.id),
+    records.map((r) => r.id),
     statusMap
   );
-  const funnelTotal = allBusinessRecords.length || 1;
+  const funnelTotal = records.length || 1;
 
   const kpis = [
     {
       label: 'Jami bizneslar',
-      value: String(summaryStats.totalRecords),
+      value: String(stats.totalRecords),
       note: '100% faol yozuvlar',
       noteColor: 'text-success-700',
       icon: BadgeCheck,
@@ -43,7 +44,7 @@ const Analytics = () => {
     },
     {
       label: 'Telefon qamrovi',
-      value: `${Math.round((phoneValidCount / allBusinessRecords.length) * 100)}%`,
+      value: `${Math.round((phoneValidCount / records.length) * 100)}%`,
       note: `${phoneValidCount} ta yozuvda aloqa bor`,
       noteColor: 'text-brand-600',
       icon: PhoneCall,
@@ -59,7 +60,7 @@ const Analytics = () => {
     },
     {
       label: 'Jamoa samaradorligi',
-      value: `~${Math.round(summaryStats.totalRecords / summaryStats.totalMembers)}`,
+      value: `~${Math.round(stats.totalRecords / stats.totalMembers)}`,
       note: 'Har bir aʼzoga oʻrtacha',
       noteColor: 'text-emerald-600',
       icon: Users,
@@ -123,7 +124,7 @@ const Analytics = () => {
           <h2 className="section-title mb-4">Shaharlar boʻyicha taqsimot</h2>
           <div className="flex flex-col gap-3.5">
             {cityList.map(([cityName, count]) => {
-              const percent = Math.round((count / allBusinessRecords.length) * 100);
+              const percent = Math.round((count / records.length) * 100);
               return (
                 <div key={cityName}>
                   <div className="mb-1.5 flex items-center justify-between text-sm">
@@ -145,8 +146,8 @@ const Analytics = () => {
         <section className="card p-5">
           <h2 className="section-title mb-4">Jamoa aʼzolari hissasi</h2>
           <div className="flex flex-col gap-3.5">
-            {allTeamMembers.map((m) => {
-              const percent = Math.round((m.recordsCount / allBusinessRecords.length) * 100);
+            {members.map((m) => {
+              const percent = Math.round((m.recordsCount / records.length) * 100);
               return (
                 <div key={m.id}>
                   <div className="mb-1.5 flex items-center justify-between text-sm">
@@ -179,7 +180,7 @@ const Analytics = () => {
                     {count} ta yozuv
                   </span>
                   <span className="text-xs text-ink-muted">
-                    {Math.round((count / allBusinessRecords.length) * 100)}% ulush
+                    {Math.round((count / records.length) * 100)}% ulush
                   </span>
                 </div>
               </div>

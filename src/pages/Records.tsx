@@ -7,10 +7,10 @@ import StatusSelect from '../components/StatusSelect';
 import { STATUS_FLOW } from '../statuses/statuses';
 import { useStatusMap } from '../statuses/statusStore';
 import type { BusinessRecord } from '../data/teamData';
-import { allBusinessRecords, allTeamMembers, summaryStats } from '../data/teamData';
+import { useAppData } from '../data/dataContext';
 
 const Records = () => {
-  const [records, setRecords] = useState<BusinessRecord[]>(allBusinessRecords);
+  const { records, members, stats, addRecord } = useAppData();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('all');
   const [selectedMember, setSelectedMember] = useState('all');
@@ -84,7 +84,7 @@ const Records = () => {
             aria-label="Shahar boʻyicha filtrlash"
           >
             <option value="all">Barcha shaharlar ({records.length})</option>
-            {summaryStats.cities.map((city) => (
+            {stats.cities.map((city) => (
               <option key={city} value={city}>
                 {city}
               </option>
@@ -100,8 +100,8 @@ const Records = () => {
             }}
             aria-label="Jamoa aʼzosi boʻyicha filtrlash"
           >
-            <option value="all">Barcha aʼzolar ({allTeamMembers.length})</option>
-            {allTeamMembers.map((m) => (
+            <option value="all">Barcha aʼzolar ({members.length})</option>
+            {members.map((m) => (
               <option key={m.id} value={m.name}>
                 {m.name} ({m.recordsCount})
               </option>
@@ -340,7 +340,7 @@ const Records = () => {
       <AddRecordModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={(newRecord) => setRecords((prev) => [newRecord, ...prev])}
+        onAdd={addRecord}
       />
     </div>
   );

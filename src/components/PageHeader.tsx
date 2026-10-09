@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Download, Plus, Search } from 'lucide-react';
-import { exportToCSV, exportToJSON, allBusinessRecords } from '../data/teamData';
+import { exportToCSV, exportToJSON } from '../data/teamData';
+import { useAppData } from '../data/dataContext';
 
 interface PageHeaderProps {
   title: string;
@@ -27,6 +28,7 @@ const PageHeader = ({
 }: PageHeaderProps) => {
   const [exportOpen, setExportOpen] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
+  const { records } = useAppData();
 
   // Tasharida bosilganda eksport menyusini yopamiz
   useEffect(() => {
@@ -93,7 +95,7 @@ const PageHeader = ({
             <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-xl border border-line bg-surface py-1 shadow-pop">
               <button
                 type="button"
-                onClick={() => download(() => exportToCSV(allBusinessRecords, 'barcha-bizneslar.csv'))}
+                onClick={() => download(() => exportToCSV(records, 'barcha-bizneslar.csv'))}
                 className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-ink-soft hover:bg-canvas hover:text-ink"
               >
                 <span className="size-2 rounded-sm bg-success-500" />
@@ -101,7 +103,7 @@ const PageHeader = ({
               </button>
               <button
                 type="button"
-                onClick={() => download(() => exportToJSON(allBusinessRecords, 'barcha-bizneslar.json'))}
+                onClick={() => download(() => exportToJSON(records, 'barcha-bizneslar.json'))}
                 className="flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-ink-soft hover:bg-canvas hover:text-ink"
               >
                 <span className="size-2 rounded-sm bg-brand-500" />

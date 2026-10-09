@@ -1,6 +1,7 @@
 import abdullohData from './Abdulloh.js';
 import abdumajidData from './Abdumajid.js';
 import asadbekData from './Asadbek.js';
+import bibixojarData from './BibiXojar.js';
 import bilolData from './Bilol.js';
 import ibrohimData from './Ibrohim.js';
 import ilyosxojaData from './Ilyosxoja.js';
@@ -8,6 +9,10 @@ import javlonData from './Javlon.js';
 import kamolData from './Kamol.js';
 import mohiData from './Mohi.js';
 import zohirshohData from './Zohirshoh.js';
+
+import ibrohimInstData from '../instdata/IbrohimInst.js';
+import ilyosxojaInstData from '../instdata/Ilyosxojainst.js';
+import zohirshohInstData from '../instdata/Zohirshohinst.js';
 
 export interface BusinessRecord {
   id: string;
@@ -35,6 +40,88 @@ export interface TeamMember {
   categories: string[];
   records: BusinessRecord[];
 }
+
+/** Instagram orqali topilgan biznes (src/instdata ma'lumotlari) */
+export interface InstagramBusiness {
+  id: string;
+  source: string;
+  name: string;
+  username?: string;
+  phone?: string;
+  address?: string;
+  category?: string;
+  contact?: string;
+  description?: string;
+  owner?: string;
+}
+
+function normalizeUsername(value: unknown): string | undefined {
+  if (!value) return undefined;
+  let s = String(value).trim();
+  const m = s.match(/instagram\.com\/([A-Za-z0-9._]+)/i);
+  if (m) s = m[1];
+  s = s.replace(/^@+/, '').replace(/\/+$/, '').trim();
+  return s || undefined;
+}
+
+function looksLikePhone(value: unknown): boolean {
+  if (!value) return false;
+  return /\+?\d[\d\s()-]{6,}/.test(String(value)) && !/telegram|instagram|профиль/i.test(String(value));
+}
+
+function buildInstagramBusinesses(): InstagramBusiness[] {
+  const out: InstagramBusiness[] = [];
+
+  (ibrohimInstData || []).forEach((item: any, idx: number) => {
+    out.push({
+      id: `ibrohim-inst-${item.id ?? idx + 1}`,
+      source: 'Ibrohim',
+      name: (item.biznesNomi || '').trim() || 'Instagram biznes',
+      username: normalizeUsername(item.instagramUsername),
+      phone: (item.telefon || '').trim() || undefined,
+      address: (item.manzil || '').trim() || undefined,
+      category: 'Instagram biznes',
+      owner: [item.ism, item.familiya].filter(Boolean).join(' ').trim() || undefined,
+    });
+  });
+
+  (ilyosxojaInstData || []).forEach((item: any, idx: number) => {
+    out.push({
+      id: `ilyosxoja-inst-${item.id ?? idx + 1}`,
+      source: 'Ilyosxoja',
+      name: (item.business_name || '').trim() || 'Instagram biznes',
+      username: normalizeUsername(item.instagram_username),
+      phone: looksLikePhone(item.contact) ? String(item.contact).trim() : undefined,
+      category: (item.category || '').trim() || undefined,
+      contact: (item.contact || '').trim() || undefined,
+      description: (item.description || '').trim() || undefined,
+    });
+  });
+
+  (zohirshohInstData || []).forEach((item: any, idx: number) => {
+    const m = /\(([^)]+)\)/.exec(item.name || '');
+    const rawPhone = (item.phone || '').trim();
+    out.push({
+      id: `zohirshoh-inst-${idx + 1}`,
+      source: 'Zohirshoh',
+      name: (item.name || '').replace(/\s*\([^)]*\)\s*/, ' ').trim() || 'Instagram biznes',
+      username: normalizeUsername(m ? m[1] : undefined),
+      phone: /не указан/i.test(rawPhone) ? undefined : rawPhone || undefined,
+      address: (item.location || '').trim() || undefined,
+      category: (item.category || '').trim() || undefined,
+      contact: rawPhone || undefined,
+    });
+  });
+
+  return out;
+}
+
+/** Instagram bizneslar (nolbop holat uchun frontend zaxirasi) */
+export const allInstagramBusinesses: InstagramBusiness[] = buildInstagramBusinesses();
+
+export const instagramSources: string[] = Array.from(
+  new Set(allInstagramBusinesses.map((b) => b.source))
+);
 
 function detectCity(text: string, fallback: string): string {
   const lower = (text || '').toLowerCase();
@@ -101,6 +188,21 @@ const asadbekRecords: BusinessRecord[] = (asadbekData || []).map((item: any, idx
   note: [item.digital_status, item.offer].filter(Boolean).join(' • '),
   status: item.verification === 'confirmed' ? 'verified' : 'pending',
   priority: item.priority || 'Oʻrta',
+  raw: item,
+}));
+
+// Normalize BibiXojar (Toshkent brendlar, doʻkonlar va kafelar)
+const bibixojarRecords: BusinessRecord[] = (bibixojarData || []).map((item: any, idx: number) => ({
+  id: `bibixojar-${item.id || idx + 1}`,
+  member: 'BibiXojar',
+  name: item.name || 'Nomsiz biznes',
+  category: item.category || 'Savdo & Xizmatlar',
+  phone: item.phone || '',
+  address: item.address || '',
+  city: detectCity(item.address, 'Toshkent'),
+  link: item.instagram || item.telegram || '',
+  note: [item.instagram, item.telegram, item.workingHours ? `Ish vaqti: ${item.workingHours}` : ''].filter(Boolean).join(' • '),
+  status: item.phone ? 'verified' : 'pending',
   raw: item,
 }));
 
@@ -236,6 +338,7 @@ export const allBusinessRecords: BusinessRecord[] = [
   ...abdullohRecords,
   ...abdumajidRecords,
   ...asadbekRecords,
+  ...bibixojarRecords,
   ...bilolRecords,
   ...ibrohimRecords,
   ...ilyosxojaRecords,
@@ -282,6 +385,17 @@ export const allTeamMembers: TeamMember[] = [
     recordsCount: asadbekRecords.length,
     categories: getCategories(asadbekRecords),
     records: asadbekRecords,
+  },
+  {
+    id: 'bibixojar',
+    name: 'BibiXojar',
+    role: 'Toshkent Brendlar & Savdo',
+    initials: 'BX',
+    color: '#e11d48',
+    city: 'Toshkent',
+    recordsCount: bibixojarRecords.length,
+    categories: getCategories(bibixojarRecords),
+    records: bibixojarRecords,
   },
   {
     id: 'bilol',
@@ -362,7 +476,16 @@ export const allTeamMembers: TeamMember[] = [
   },
 ];
 
-export const summaryStats = {
+export interface SummaryStats {
+  totalRecords: number;
+  totalMembers: number;
+  citiesCount: number;
+  verifiedPercentage: number;
+  cities: string[];
+  instagramCount: number;
+}
+
+export const summaryStats: SummaryStats = {
   totalRecords: allBusinessRecords.length,
   totalMembers: allTeamMembers.length,
   citiesCount: new Set(allBusinessRecords.map(r => r.city)).size,
@@ -370,6 +493,7 @@ export const summaryStats = {
     (allBusinessRecords.filter(r => r.phone && r.phone.length > 5).length / allBusinessRecords.length) * 100
   ),
   cities: Array.from(new Set(allBusinessRecords.map(r => r.city))),
+  instagramCount: allInstagramBusinesses.length,
 };
 
 export function exportToCSV(records: BusinessRecord[], filename = 'business-data.csv') {

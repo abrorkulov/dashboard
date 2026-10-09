@@ -7,7 +7,8 @@ import StatusBadge from '../components/StatusBadge';
 import MemberAvatar from '../components/MemberAvatar';
 import { useStatusMap } from '../statuses/statusStore';
 import type { TeamMember, BusinessRecord } from '../data/teamData';
-import { allTeamMembers, exportToCSV } from '../data/teamData';
+import { exportToCSV } from '../data/teamData';
+import { useAppData } from '../data/dataContext';
 
 const Team = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
@@ -17,6 +18,7 @@ const Team = () => {
   const [detailRecord, setDetailRecord] = useState<BusinessRecord | null>(null);
 
   const statusMap = useStatusMap();
+  const { members } = useAppData();
 
   const openMember = (member: TeamMember) => {
     setSelectedMember(member);
@@ -24,7 +26,7 @@ const Team = () => {
     setIsModalOpen(true);
   };
 
-  const filteredMembers = allTeamMembers.filter(
+  const filteredMembers = members.filter(
     (m) =>
       m.name.toLowerCase().includes(memberSearch.toLowerCase()) ||
       m.city.toLowerCase().includes(memberSearch.toLowerCase()) ||
@@ -47,7 +49,7 @@ const Team = () => {
     <div>
       <PageHeader
         title="Jamoa aʼzolari"
-        subtitle={`${allTeamMembers.length} nafar aʼzo tomonidan toʻplangan barcha biznes maʼlumotlari`}
+        subtitle={`${members.length} nafar aʼzo tomonidan toʻplangan barcha biznes maʼlumotlari`}
         searchQuery={memberSearch}
         onSearchChange={setMemberSearch}
         searchPlaceholder="Aʼzo, shahar yoki lavozim boʻyicha qidirish..."

@@ -20,16 +20,12 @@ import MemberAvatar from '../components/MemberAvatar';
 import { STATUS_FLOW } from '../statuses/statuses';
 import { countStatuses, useStatusMap } from '../statuses/statusStore';
 import type { BusinessRecord, TeamMember } from '../data/teamData';
-import {
-  allBusinessRecords,
-  allTeamMembers,
-  summaryStats,
-  exportToCSV,
-} from '../data/teamData';
+import { exportToCSV } from '../data/teamData';
+import { useAppData } from '../data/dataContext';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [records, setRecords] = useState<BusinessRecord[]>(allBusinessRecords);
+  const { records, members, stats: appStats, addRecord } = useAppData();
   const [selectedRecord, setSelectedRecord] = useState<BusinessRecord | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -48,21 +44,21 @@ const Home = () => {
     },
     {
       title: 'Jamoa aʼzolari',
-      value: `${allTeamMembers.length} kishi`,
+      value: `${members.length} kishi`,
       sub: 'Barcha aʼzolar faol',
       icon: Users,
       tint: 'bg-violet-50 text-violet-600',
     },
     {
       title: 'Qamrab olingan shaharlar',
-      value: String(summaryStats.citiesCount),
+      value: String(appStats.citiesCount),
       sub: 'Toshkent, Buxoro, Qarshi...',
       icon: MapPin,
       tint: 'bg-rose-50 text-rose-500',
     },
     {
       title: 'Aloqa aniqligi',
-      value: `${summaryStats.verifiedPercentage}%`,
+      value: `${appStats.verifiedPercentage}%`,
       sub: 'Telefon raqamlar tasdiqlangan',
       icon: TrendingUp,
       tint: 'bg-emerald-50 text-emerald-600',
@@ -205,8 +201,8 @@ const Home = () => {
               </tr>
             </thead>
             <tbody>
-              {allTeamMembers.map((member) => {
-                const share = Math.round((member.recordsCount / allBusinessRecords.length) * 100);
+              {members.map((member) => {
+                const share = Math.round((member.recordsCount / (records.length || 1)) * 100);
                 return (
                   <tr
                     key={member.id}
@@ -277,7 +273,7 @@ const Home = () => {
             >
               Barchasi
             </button>
-            {summaryStats.cities.slice(0, 4).map((city) => (
+            {appStats.cities.slice(0, 4).map((city) => (
               <button
                 key={city}
                 type="button"
@@ -425,7 +421,7 @@ const Home = () => {
       <AddRecordModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={(newRecord) => setRecords((prev) => [newRecord, ...prev])}
+        onAdd={addRecord}
       />
 
     </div>

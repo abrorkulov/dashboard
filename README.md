@@ -1,3 +1,50 @@
+# Biznes Baza — CRM boshqaruv paneli
+
+Biznes maʼlumotlari bazasi va jamoa faoliyati uchun CRM dashboard.
+
+## Tuzilma
+
+- **Frontend** — React 19 + Vite + TypeScript + Tailwind 4 (`src/`)
+- **Backend** — Node.js + Express + Prisma + PostgreSQL (`server/`, `prisma/`)
+
+Backend bitta xizmat sifatida ham REST API (`/api/...`), ham yigʻilgan frontend'ni
+(`dist/`) beradi — Railway'ga bitta servis bilan joylashtiriladi.
+
+## Sahifalar
+
+| Yoʻl | Sahifa |
+|------|--------|
+| `/` | Asosiy panel |
+| `/team` | Jamoa aʼzolari |
+| `/records` | Barcha bizneslar |
+| `/instagram` | **Instagram Bissnesezz** (src/instdata maʼlumotlari) |
+| `/analytics` | Statistika va tahlil |
+
+## Ishga tushirish
+
+```bash
+npm install
+npm run build      # frontend + prisma generate
+npm start          # API + sayt (http://localhost:4000)
+```
+
+Batafsil (Railway'ga joylashtirish, seed, endpointlar) — [RAILWAY.md](RAILWAY.md).
+
+## Buyruqlar
+
+| Buyruq | Vazifasi |
+|--------|----------|
+| `npm run dev` | Vite dev server (HMR) |
+| `npm run build` | Frontend'ni yigʻish |
+| `npm start` | Backend'ni ishga tushirish (Railway uchun) |
+| `npm run server` | Backend'ni lokal ishga tushirish |
+| `npm run db:push` | Prisma sxemasini bazaga qoʻllash |
+| `npm run seed` | Bazani seed qilish (`-- --force` bilan qayta yozish) |
+| `npm run seed:build` | `prisma/seed-data.json` ni qayta yasash |
+| `npm run lint` | Oxlint |
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.

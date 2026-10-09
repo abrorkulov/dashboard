@@ -8,6 +8,11 @@ declare module '*/Abdumajid' {
   export default data;
 }
 
+declare module '*/BibiXojar' {
+  const data: any[];
+  export default data;
+}
+
 declare module '*/Asadbek' {
   const data: any[];
   export default data;
@@ -44,6 +49,21 @@ declare module '*/Mohi' {
 }
 
 declare module '*/Zohirshoh' {
+  const data: any[];
+  export default data;
+}
+
+declare module '*/IbrohimInst' {
+  const data: any[];
+  export default data;
+}
+
+declare module '*/Ilyosxojainst' {
+  const data: any[];
+  export default data;
+}
+
+declare module '*/Zohirshohinst' {
   const data: any[];
   export default data;
 }

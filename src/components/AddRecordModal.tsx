@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import Modal from './Modal';
 import type { BusinessRecord } from '../data/teamData';
-import { allTeamMembers } from '../data/teamData';
+import { useAppData } from '../data/dataContext';
 
 interface AddRecordModalProps {
   isOpen: boolean;
@@ -13,8 +13,9 @@ interface AddRecordModalProps {
 const cities = ['Toshkent', 'Samarqand', 'Buxoro', 'Qarshi', 'Andijon', 'Fargʻona', 'Jizzax'];
 
 const AddRecordModal = ({ isOpen, onClose, onAdd }: AddRecordModalProps) => {
+  const { members } = useAppData();
   const [name, setName] = useState('');
-  const [member, setMember] = useState(allTeamMembers[0]?.name || 'Abdulloh');
+  const [member, setMember] = useState(members[0]?.name || 'Abdulloh');
   const [category, setCategory] = useState('');
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('Toshkent');
@@ -86,7 +87,7 @@ const AddRecordModal = ({ isOpen, onClose, onAdd }: AddRecordModalProps) => {
               value={member}
               onChange={(e) => setMember(e.target.value)}
             >
-              {allTeamMembers.map((m) => (
+              {members.map((m) => (
                 <option key={m.id} value={m.name}>
                   {m.name}
                 </option>
